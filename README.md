@@ -1,10 +1,10 @@
 # [Name of the Project] : [Team 3]
 # Members
-Project Manager: [Julian Melancon] ([GitHub Name])\
+Project Manager: [Julian Melancon] ([JulianM08])\
 Communications Lead: [Alexis Harvey] ([GitHub Name])\
-Git Master: [Jack Schliewe] ([GitHub Name])\
+Git Master: [Jack Schliewe] ([thecandylane])\
 Design Lead: [Mirina Benferhat] ([GitHub Name])\
-Quality Assurance Tester: [Aaroh Desai] ([GitHub Name])
+Quality Assurance Tester: [Aaroh Desai] ([Aaroh Desai])
 
 # About Our Software
 
