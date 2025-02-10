@@ -3,7 +3,7 @@
 Project Manager: [Julian Melancon] ([JulianM08])\
 Communications Lead: [Alexis Harvey] ([Alexis-Harvey])\
 Git Master: [Jack Schliewe] ([thecandylane])\
-Design Lead: [Mirina Benferhat] ([GitHub Name])\
+Design Lead: [Mirina Benferhat] ([Mbenfe1])\
 Quality Assurance Tester: [Aaroh Desai] ([AarohD1)
 
 # About Our Software
