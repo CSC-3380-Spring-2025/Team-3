@@ -1,7 +1,7 @@
 # [Name of the Project] : [Team 3]
 # Members
 Project Manager: [Julian Melancon] ([JulianM08])\
-Communications Lead: [Alexis Harvey] ([GitHub Name])\
+Communications Lead: [Alexis Harvey] ([Alexis-Harvey])\
 Git Master: [Jack Schliewe] ([thecandylane])\
 Design Lead: [Mirina Benferhat] ([GitHub Name])\
 Quality Assurance Tester: [Aaroh Desai] ([AarohD1)
