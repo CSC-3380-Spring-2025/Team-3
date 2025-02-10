@@ -1,19 +1,15 @@
-# [Name of the Project] : [Team Number]
+# [Name of the Project] : [Team 3]
 # Members
-Project Manager: [Name] ([GitHub Name])\
-Communications Lead: [Name] ([GitHub Name])\
-Git Master: [Name] ([GitHub Name])\
-Design Lead: [Name] ([GitHub Name])\
-Quality Assurance Tester: [Name] ([GitHub Name])
+Project Manager: [Julian Melancon] ([GitHub Name])\
+Communications Lead: [Alexis Harvey] ([GitHub Name])\
+Git Master: [Jack Schliewe] ([GitHub Name])\
+Design Lead: [Mirina Benferhat] ([GitHub Name])\
+Quality Assurance Tester: [Aaroh Desai] ([GitHub Name])
 
 # About Our Software
 
 Describe a little about what the project is about here.
 ## Platforms Tested on
-- MacOS
-- Android
-- iOS
-- Linux
 - Windows
 # Important Links
 Kanban Board: [link]\
