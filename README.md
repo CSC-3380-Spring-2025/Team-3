@@ -8,11 +8,13 @@ Quality Assurance Tester: [Aaroh Desai] ([AarohD1)
 
 # About Our Software
 
-Describe a little about what the project is about here.
+Hello! Our project aims to combine a website aimed at playing games and allowing developers to upload games to launch their gaming careers. The website itself will operate with a login/ user profile based system, using HTML, CSS, and JavaScript to design our specific needs. From there we are using ______. 
+
 ## Platforms Tested on
 - Windows
+- MacOS
 # Important Links
-Kanban Board: [link]\
+Kanban Board: [https://group3kanbanboard.atlassian.net/jira/software/projects/KAN/boards/1?atlOrigin=eyJpIjoiMjNkNTZjYWQwMGQ4NDM0ODg4ZTViNDQ4ODAyOTUxNmMiLCJwIjoiaiJ9]\
 Designs: [link]\
 Styles Guide(s): [link]
 
