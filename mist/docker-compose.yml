@@ -1,0 +1,20 @@
+
+#to run docker container, use 'docker-compose up -d'
+#to shutdown for day, use 'docker-compose down'
+#to check which containers are running, use 'docker ps'
+#to see the logs for a specific service, 'docker-compose logs mongodb'
+#to restart, use 'docker-compose restart mongodb'
+#for more details about a specific container, use 'docker inspect <container_id_or_name'
+version: "3.8"
+services:
+  mongodb:
+    image: mongo:5
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
