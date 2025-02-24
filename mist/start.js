@@ -14,6 +14,9 @@ function runCommand(command) {
 
 console.log('Starting development workflow...');
 
+//making sure it's all up to date
+runCommand('git pull');
+
 //Start Docker Compose (make sure Docker & Docker Compose are installed)
 runCommand('docker-compose up -d');
 
