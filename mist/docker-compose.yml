@@ -5,7 +5,7 @@
 #to see the logs for a specific service, 'docker-compose logs mongodb'
 #to restart, use 'docker-compose restart mongodb'
 #for more details about a specific container, use 'docker inspect <container_id_or_name'
-version: "3.8"
+# version: "3.8"
 services:
   mongodb:
     image: mongo:5
