@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
       <header className="mb-8">
-        <h1 className="text-4xl font-bold">Welcome to Game Platform</h1>
+        <h1 className="text-4xl font-bold">Welcome to Play Platform</h1>
         <p className="text-lg text-gray-600 mt-2">
           Create, play, and share your browser-based video games.
         </p>
