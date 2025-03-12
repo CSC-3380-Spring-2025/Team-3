@@ -29,8 +29,6 @@ export default function Home() {
 
         <section className="mt-12">
           <h2 className="text-2xl font-semibold mb-4">Browse Games</h2>
-          {/* This is a placeholder for the list of available games.
-              As you progress, replace this with your dynamic game list component */}
           <p className="text-gray-500">
             No games available yet. Start by creating your first game!
           </p>
