@@ -1,3 +1,6 @@
+//EXAMPLE OF A GAME INTERFACE
+//PLEASE MAKE CHANGES AS NEEDED
+
 // Interface for Game Objects
 interface GameObject {
     update(deltaTime: number): void;
