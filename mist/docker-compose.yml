@@ -6,6 +6,7 @@
 #to restart, use 'docker-compose restart mongodb'
 #for more details about a specific container, use 'docker inspect <container_id_or_name'
 # version: "3.8"
+
 services:
   mongodb:
     image: mongo:5
@@ -13,6 +14,11 @@ services:
     restart: always
     ports:
       - "27017:27017"
+    #might need
+#environment:
+#MONGO_INITDB_ROOT_USERNAME=admin_user
+#MONGO_INITDB_ROOT_PASSWORD=admin_pass
+#MONGO_INITDB_DATABASE=database
     volumes:
       - mongo_data:/data/db
 
