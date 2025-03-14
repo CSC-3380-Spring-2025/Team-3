@@ -80,12 +80,6 @@ export default function Login() {
             Login
           </button>
         </form>
-        <p className="mt-4 text-center">
-          Don’t have an account?{" "}
-          <Link href="pages/login/signup" className="text-blue-600 hover:underline">
-            Sign Up
-          </Link>
-        </p>
       </main>
     </div>
   );

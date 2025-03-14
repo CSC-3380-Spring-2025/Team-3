@@ -10,12 +10,107 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
-    --foreground: #ededed;
+    --foreground: #1695c3;
   }
 }
 
+html,
 body {
+  margin: 0;
+  padding: 0;
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-container {
+  background-color: #ffffff; 
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background-color: #1695c3;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.25rem; 
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 2rem; 
+}
+
+button {
+  background-color: #d699cc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin: 0.25rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ecc3f1;
+}
+
+.home-button {
+  display: inline-block;
+  text-decoration: none;
+  background-color: #ecc3f1; 
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.home-button:hover {
+  background-color: #001f4c;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  background-color: #ffffff;
+}
+
+.app-footer {
+  background-color: #1695c3;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  font-size: 1.25rem; 
+}
+
+.app-footer h3 {
+  margin: 0 0 1rem;
+  font-size: 1.75rem; 
+}
+
+.footer-images {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 800px;
+  margin: 0 auto;
+  gap: 1rem;
+}
+
+.footer-images img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 4px;
 }
