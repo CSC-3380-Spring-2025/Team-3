@@ -1,7 +1,8 @@
 /*login page for users to create a profile
 * Components to create:
 *   email, username, password, area to select if a developer or a game user
-*/"use client";
+*/
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -16,7 +17,6 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Skeleton fetch request to your dedicated backend API route
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
@@ -26,15 +26,15 @@ export default function Login() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        setError(errorData.message || "Login failed. Please try again.");
+        setError(errorData.message || "WOMP WOMP WOMP. spam it again.");
         return;
       }
 
-      // Redirect to home or dashboard on success
+
       router.push("/");
     } catch (err) {
       console.error(err);
-      setError("An unexpected error occurred during login.");
+      setError("An unexpected error occurred du-- faskdhfasdkfjasdfsd;fjasdlkfja.");
     }
   };
 

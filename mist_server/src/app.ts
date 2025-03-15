@@ -45,13 +45,24 @@ class App{
 
   }
 
-  private initializeDatabaseConnection(): void{
-    const { MONGO_USER, MONGO_PASSWORD, MONGODB_URI} = process.env;
-    
-    mongoose.connect(
-      `mongodb://${MONGO_USER}: ${MONGO_PASSWORD}${MONGODB_URI}`
-    )
+  private initializeDatabaseConnection(): void {
+    const { AUTH_ENABLED, MONGO_URI, MONGO_USER, MONGO_PASSWORD, MONGODB_URI } = process.env;
+  
+    let connectionString: string;
+    if (AUTH_ENABLED === "true") {
+      connectionString = `mongodb://${MONGO_USER}:${MONGO_PASSWORD}${MONGODB_URI}`;
+    } else {
+      connectionString = MONGO_URI!;
+    }
+  
+    mongoose.connect(connectionString)
+      .then(() => console.log("Connected to MongoDB"))
+      .catch((err) => {
+        console.error("MongoDB connection error:", err);
+        process.exit(1);
+      });
   }
+  
 
   public listen(): void{
     this.express.listen(this.port, () => {

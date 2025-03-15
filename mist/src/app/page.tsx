@@ -1,6 +1,11 @@
 import Link from "next/link";
 
+<<<<<<< Updated upstream
 export default function HomePage() {
+=======
+
+export default function Home() {
+>>>>>>> Stashed changes
   return (
     <div className="app-container min-h-screen w-full flex flex-col">
       {/* Header */}
