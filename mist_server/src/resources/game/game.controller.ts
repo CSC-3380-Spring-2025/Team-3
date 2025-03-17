@@ -15,7 +15,7 @@ class GameController implements Controller {
     }
 
     private initializeRoutes(): void {
-        this.router.game(
+        this.router.post(
             `${this.path}`,
             validationMiddleware(validate.create),
             this.create
