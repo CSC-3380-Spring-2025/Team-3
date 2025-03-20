@@ -13,7 +13,7 @@ class PostService{
 
         return post;
     } catch (error) {
-        throw new Error('unable to create a post');
+        throw new Error('unable to create this post');
     }
    }
 }

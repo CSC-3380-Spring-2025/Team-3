@@ -13,7 +13,7 @@ class GameService{
 
         return game;
     } catch (error) {
-        throw new Error('unable to create a game');
+        throw new Error('unable to create this game');
     }
    }
 }
