@@ -8,11 +8,45 @@ const GameSchema = new Schema(
             required: true
         },
 
-        body: {
+        sprite: {
             type: String,
             required: true
         },
 
+        player: {
+            type: String,
+            required: true
+        },
+
+        gameObject: {
+            type: String,
+            required: false
+        },
+
+        obstacle: {
+            type: String,
+            required: false
+        },
+
+        border: {
+            type: String,
+            required: false
+        },
+
+        enemy: {
+            type: String,
+            required: false
+        },
+
+        bullets: {
+            type: String,
+            required: false
+        },
+
+        background: {
+            type: String,
+            required: false
+        }
     },
     {timestamps: true}
 )
