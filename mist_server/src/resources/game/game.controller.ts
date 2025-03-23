@@ -18,25 +18,21 @@ class GameController implements Controller {
         this.router.post(
             `${this.path}`,
             validationMiddleware(validate.create),
-            this.create
+            this.createGame
         )
     };
 
-    private create = async (
-        req: Request,
-        res: Response,
-        next: NextFunction,
-
-    ): Promise<void> => {
-        try {
-            const { title, body } = req.body;
-
-            const game = await this.GameService.create(title, body);
-
-            res.status(201).json({ game })
-        } catch (error) {
-            //could also do error.message and rely on the message sent from the service 
-            next(new HttpException(400, 'Cannot create this game'));
+    private createGame = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
+    try {
+      const { title, sprite, player, gameObject, obstacle, border, enemy, bullets, background } = req.body;
+      const game = await this.GameService.createGame({ title, sprite, player, gameObject, obstacle, border, enemy, bullets, background });
+      res.status(201).json({ game });
+    } catch (error: any) {
+      next(new HttpException(400, error.message));
         }
     }
 }
