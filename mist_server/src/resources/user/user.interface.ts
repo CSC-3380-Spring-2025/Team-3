@@ -1,10 +1,10 @@
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export default interface User extends Document {
-    email: string;
-    name: string;
-    password: string;
-    role:string;
-
-    isValidPassword(password: string): Promise<Error | boolean>;
+  name: string;
+  email: string;
+  password: string;
+  role: string;
+  games: Types.ObjectId[]; 
+  isValidPassword(password: string): Promise<boolean>;
 }
