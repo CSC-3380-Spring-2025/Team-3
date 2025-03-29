@@ -9,7 +9,6 @@ type Game = {
   imageUrl: string;
 };
 
-// Dummy list of featured games
 const featuredGames: Game[] = [
   {
     id: 1,
@@ -31,7 +30,6 @@ const featuredGames: Game[] = [
   },
 ];
 
-// Dummy list of user uploaded games
 const userUploadedGames: Game[] = [
   {
     id: 4,
@@ -61,15 +59,13 @@ export default function HomePage() {
 
   return (
     <div className="app-container min-h-screen w-full flex flex-col">
-      {/* Header with custom font */}
+      {/* Header */}
       <header className="app-header header-font">
         <div className="navbar flex justify-between items-center p-4">
-          {/* Left side: Title + Slogan */}
           <div>
             <h1>ORCA INDUSTRIES</h1>
             <p className="m-0">play, program, create, collaborate</p>
           </div>
-          {/* Right side: Link to Home */}
           <Link href="login">
             <button className="btn">Login</button>
           </Link>
@@ -92,7 +88,7 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-1">{game.title}</h3>
                 <p className="mb-4">{game.description}</p>
                 <div className="flex gap-2">
-                  <Link href={`/games/${game.id}`}>
+                  <Link href={`/pages/game${game.id}`}>
                     <button className="btn">Play Now</button>
                   </Link>
                   <button onClick={() => toggleFavorite(game)} className="btn">
@@ -123,7 +119,7 @@ export default function HomePage() {
                   <h3 className="text-xl font-bold mb-1">{game.title}</h3>
                   <p className="mb-4">{game.description}</p>
                   <div className="flex gap-2">
-                    <Link href={`/games/${game.id}`}>
+                    <Link href={`/pages/game${game.id}`}>
                       <button className="btn">Play Now</button>
                     </Link>
                     <button onClick={() => toggleFavorite(game)} className="btn">
@@ -150,7 +146,8 @@ export default function HomePage() {
                 <h3 className="text-xl font-bold mb-1">{game.title}</h3>
                 <p className="mb-4">{game.description}</p>
                 <div className="flex gap-2">
-                  <Link href={`/games/${game.id}`}>
+                  {/* Updated link for user uploaded games */}
+                  <Link href={`/usergame${game.id}`}>
                     <button className="btn">Play Now</button>
                   </Link>
                   <button onClick={() => toggleFavorite(game)} className="btn">
@@ -168,29 +165,13 @@ export default function HomePage() {
       {/* Footer */}
       <footer
         className="app-footer flex flex-col items-center justify-center p-4"
-        style={{
-          backgroundColor: "#1695c3",
-          color: "#fff",
-          textAlign: "center",
-        }}
+        style={{ backgroundColor: "#1695c3", color: "#fff", textAlign: "center" }}
       >
         <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
         <div className="flex justify-between w-full max-w-3xl gap-4">
-          <img
-            src="/images/game1.jpg"
-            alt="Game 1"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game2.jpg"
-            alt="Game 2"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game3.jpg"
-            alt="Game 3"
-            className="w-1/4 h-auto object-cover"
-          />
+          <img src="/images/game1.jpg" alt="Game 1" className="w-1/4 h-auto object-cover" />
+          <img src="/images/game2.jpg" alt="Game 2" className="w-1/4 h-auto object-cover" />
+          <img src="/images/game3.jpg" alt="Game 3" className="w-1/4 h-auto object-cover" />
         </div>
       </footer>
     </div>
