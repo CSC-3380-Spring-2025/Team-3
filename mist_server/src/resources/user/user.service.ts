@@ -26,7 +26,7 @@ class UserService {
 
             return accessToken;
         } catch (error) {
-            throw new Error('uabe to make user')
+            throw new Error('unable to make user')
         }
     }
 
@@ -41,19 +41,19 @@ class UserService {
         try {
             const user = await this.user.findOne({email})
             if  (!user){
-                throw new Error('cant find him')
+                throw new Error('Cannot find this email')
             }
 
             if (await user.isValidPassword(password)){
                 return token.createToken(user)
             } else {
                 throw new Error(
-                    'wrong.'
+                    'Incorrect password'
                 )
             }
         } catch (error) {
             throw new Error(
-                'unable ton login user'
+                'unable to log in user'
             )
             
         }
