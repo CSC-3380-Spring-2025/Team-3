@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 type Game = {
   id: number;
@@ -8,8 +9,7 @@ type Game = {
   imageUrl: string;
 };
 
-// Dummy list of games for demonstration
-const dummyGames: Game[] = [
+const featuredGames: Game[] = [
   {
     id: 1,
     title: "Game 1",
@@ -30,74 +30,148 @@ const dummyGames: Game[] = [
   },
 ];
 
+const userUploadedGames: Game[] = [
+  {
+    id: 4,
+    title: "User Game 1",
+    description: "A cool game uploaded by a user.",
+    imageUrl: "/images/usergame1.jpg",
+  },
+  {
+    id: 5,
+    title: "User Game 2",
+    description: "Another creative game from our community.",
+    imageUrl: "/images/usergame2.jpg",
+  },
+];
+
 export default function HomePage() {
+  const [favorites, setFavorites] = useState<Game[]>([]);
+
+  // Toggle favorite status of a game
+  const toggleFavorite = (game: Game) => {
+    setFavorites((prevFavorites) =>
+      prevFavorites.some((fav) => fav.id === game.id)
+        ? prevFavorites.filter((fav) => fav.id !== game.id)
+        : [...prevFavorites, game]
+    );
+  };
+
   return (
     <div className="app-container min-h-screen w-full flex flex-col">
       {/* Header */}
-      <header className="app-header">
-        <div className="navbar">
-          {/* Left side: Title + Slogan */}
+      <header className="app-header header-font">
+        <div className="navbar flex justify-between items-center p-4">
           <div>
             <h1>ORCA INDUSTRIES</h1>
             <p className="m-0">play, program, create, collaborate</p>
           </div>
-          {/* Right side: Link to Login */}
           <Link href="login">
-            <button>Login</button>
+            <button className="btn">Login</button>
           </Link>
         </div>
       </header>
 
       {/* Main Content */}
       <main className="main-content flex-grow p-6">
-        <h2 className="text-2xl font-bold mb-6">All Games</h2>
+        {/* Featured Games Section */}
+        <section className="featured-games mb-8">
+          <h2 className="text-2xl font-bold mb-6">Featured Games</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {featuredGames.map((game) => (
+              <div key={game.id} className="border rounded p-4 shadow-sm">
+                <img
+                  src={game.imageUrl}
+                  alt={game.title}
+                  className="w-full h-48 object-cover mb-2"
+                />
+                <h3 className="text-xl font-bold mb-1">{game.title}</h3>
+                <p className="mb-4">{game.description}</p>
+                <div className="flex gap-2">
+                  <Link href={`/pages/game${game.id}`}>
+                    <button className="btn">Play Now</button>
+                  </Link>
+                  <button onClick={() => toggleFavorite(game)} className="btn">
+                    {favorites.some((fav) => fav.id === game.id)
+                      ? "Unfavorite"
+                      : "Favorite"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-        {/* Game Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {dummyGames.map((game) => (
-            <div key={game.id} className="border rounded p-4 shadow-sm">
-              <img
-                src={game.imageUrl}
-                alt={game.title}
-                className="w-full h-48 object-cover mb-2"
-              />
-              <h3 className="text-xl font-bold mb-1">{game.title}</h3>
-              <p className="mb-4">{game.description}</p>
-              {/* Link to a detail/play page for each game */}
-              <Link href={`/games/${game.id}`}>
-                <button>Play Now</button>
-              </Link>
+        {/* Favorite Games Section */}
+        <section className="favorite-games mb-8">
+          <h2 className="text-2xl font-bold mb-6">Your Favorite Games</h2>
+          {favorites.length === 0 ? (
+            <p>You haven't favorited any games yet.</p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {favorites.map((game) => (
+                <div key={game.id} className="border rounded p-4 shadow-sm">
+                  <img
+                    src={game.imageUrl}
+                    alt={game.title}
+                    className="w-full h-48 object-cover mb-2"
+                  />
+                  <h3 className="text-xl font-bold mb-1">{game.title}</h3>
+                  <p className="mb-4">{game.description}</p>
+                  <div className="flex gap-2">
+                    <Link href={`/pages/game${game.id}`}>
+                      <button className="btn">Play Now</button>
+                    </Link>
+                    <button onClick={() => toggleFavorite(game)} className="btn">
+                      Unfavorite
+                    </button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          )}
+        </section>
+
+        {/* User Uploaded Games Section */}
+        <section className="user-uploaded-games">
+          <h2 className="text-2xl font-bold mb-6">User Uploaded Games</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {userUploadedGames.map((game) => (
+              <div key={game.id} className="border rounded p-4 shadow-sm">
+                <img
+                  src={game.imageUrl}
+                  alt={game.title}
+                  className="w-full h-48 object-cover mb-2"
+                />
+                <h3 className="text-xl font-bold mb-1">{game.title}</h3>
+                <p className="mb-4">{game.description}</p>
+                <div className="flex gap-2">
+                  {/* Updated link for user uploaded games */}
+                  <Link href={`/usergame${game.id}`}>
+                    <button className="btn">Play Now</button>
+                  </Link>
+                  <button onClick={() => toggleFavorite(game)} className="btn">
+                    {favorites.some((fav) => fav.id === game.id)
+                      ? "Unfavorite"
+                      : "Favorite"}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
       </main>
 
       {/* Footer */}
       <footer
         className="app-footer flex flex-col items-center justify-center p-4"
-        style={{
-          backgroundColor: "#1695c3",
-          color: "#fff",
-          textAlign: "center",
-        }}
+        style={{ backgroundColor: "#1695c3", color: "#fff", textAlign: "center" }}
       >
         <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
         <div className="flex justify-between w-full max-w-3xl gap-4">
-          <img
-            src="/images/game1.jpg"
-            alt="Game 1"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game2.jpg"
-            alt="Game 2"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game3.jpg"
-            alt="Game 3"
-            className="w-1/4 h-auto object-cover"
-          />
+          <img src="/images/game1.jpg" alt="Game 1" className="w-1/4 h-auto object-cover" />
+          <img src="/images/game2.jpg" alt="Game 2" className="w-1/4 h-auto object-cover" />
+          <img src="/images/game3.jpg" alt="Game 3" className="w-1/4 h-auto object-cover" />
         </div>
       </footer>
     </div>
