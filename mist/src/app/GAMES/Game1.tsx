@@ -181,7 +181,7 @@ interface GameObject {
   
     // The main game loop using requestAnimationFrame
     gameLoop = (time: number) => {
-      const deltaTime = (time - this.lastTime) / 1000;
+      let deltaTime = (time - this.lastTime) / 1000;
       this.lastTime = time;
   
       this.update(deltaTime);
