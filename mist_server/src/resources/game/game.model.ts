@@ -1,5 +1,6 @@
 import { Schema, model} from 'mongoose';
 import Game from '@/resources/game/game.interface';
+import { number } from 'joi';
 
 const GameSchema = new Schema(
     {
@@ -46,7 +47,43 @@ const GameSchema = new Schema(
         background: {
             type: String,
             required: false
+        },
+
+        weapon: {
+            type: undefined,
+            required: false
+        },
+
+        score: {
+            type: number,
+            required: false
+        },
+
+        nameTag: {
+            type: String,
+            required: false
+        },
+
+        healthBar: {
+            type: undefined,
+            required: false
+        },
+
+        itemDescription: {
+            type: String,
+            required: false
+        },
+
+        menu: {
+            type: String,
+            required: false
+        },
+
+        damageNum: {
+            type: number,
+            required: false
         }
+
     },
     {timestamps: true}
 )
