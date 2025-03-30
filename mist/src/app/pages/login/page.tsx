@@ -26,7 +26,7 @@ export default function Login() {
 
       if (!res.ok) {
         const errorData = await res.json();
-        setError(errorData.message || "WOMP WOMP WOMP. spam it again.");
+        setError(errorData.message || "An unexpected error occurred. Please try again.");
         return;
       }
 
@@ -34,7 +34,7 @@ export default function Login() {
       router.push("/");
     } catch (err) {
       console.error(err);
-      setError("An unexpected error occurred du-- faskdhfasdkfjasdfsd;fjasdlkfja.");
+      setError("Either your email or password is incorrect. Please try again");
     }
   };
 
