@@ -1,4 +1,4 @@
-// Brain Rot Memory Match Game 
+import { createInterface } from 'readline';
 
 class MemoryGame {
     private board: string[];
@@ -12,20 +12,16 @@ class MemoryGame {
         this.visible = new Array(20).fill(false);
     }
 
-    
     private makeBoard(): string[] {
         const symbols = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
         const pairs = [...symbols, ...symbols];
-        
-        
-        return pairs.sort(() => Math.random() - 0.7); 
+        return pairs.sort(() => Math.random() - 0.7);
+    }
 
-    
     async startGame() {
         this.gameActive = true;
         console.log('Game started! You have 45 seconds.');
 
-        
         const timer = setInterval(() => {
             this.timeLeft--;
             if (this.timeLeft <= 0) {
@@ -33,25 +29,23 @@ class MemoryGame {
                 clearInterval(timer);
                 process.exit();
             }
-        }, 1000); 
+        }, 1000);
 
         while (this.gameActive) {
             this.printBoard();
-            
-        
+
             const first = await this.getInput('Enter first card index (0-19): ');
             if (first < 0 || first > 19) {
                 console.log('Invalid index!');
                 continue;
             }
-            
+
             const second = await this.getInput('Enter second card index (0-19): ');
             if (second < 0 || second > 19) {
                 console.log('Invalid index!');
                 continue;
             }
 
-            
             if (first === second) {
                 console.log('Cannot pick same card!');
                 continue;
@@ -69,7 +63,6 @@ class MemoryGame {
                 this.hideCards([first, second]);
             }
 
-           
             if (this.visible.every(v => v)) {
                 console.log(`You won in ${this.moves} moves!`);
                 clearInterval(timer);
@@ -79,7 +72,6 @@ class MemoryGame {
     }
 
     private revealCards(indices: number[]) {
-       
         indices.forEach(i => this.visible[i] = true);
         this.printBoard();
     }
@@ -87,12 +79,11 @@ class MemoryGame {
     private hideCards(indices: number[]) {
         setTimeout(() => {
             indices.forEach(i => this.visible[i] = false);
-        }, 1000); 
+        }, 1000);
     }
 
     private printBoard() {
         console.log('\nCurrent Board:');
-        
         let output = '';
         this.board.forEach((card, index) => {
             output += this.visible[index] ? `[${card}] ` : `[${index}] `;
@@ -101,15 +92,15 @@ class MemoryGame {
         console.log(output);
     }
 
-    private async getInput(prompt: string): Promise<number> {
-        const readline = require('readline').createInterface({
+    private async getInput(promptText: string): Promise<number> {
+        const rl = createInterface({
             input: process.stdin,
             output: process.stdout
         });
 
         return new Promise(resolve => {
-            readline.question(prompt, answer => {
-                readline.close();
+            rl.question(promptText, (answer: string) => {
+                rl.close();
                 resolve(parseInt(answer));
             });
         });
@@ -118,4 +109,4 @@ class MemoryGame {
 
 // Start game
 const game = new MemoryGame();
-game.startMemoryGame();
+game.startGame();
