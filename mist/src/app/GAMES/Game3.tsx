@@ -1,4 +1,6 @@
-// game 2 under frontend game data 
+// game 3 under frontend game data 
+
+import { useCallback, useEffect, useState } from "react";
 
 
 interface Question {
@@ -84,4 +86,4 @@ interface Question {
       setIsCorrect(null);
       setGameOver(false);
     };
-  
+}
