@@ -82,6 +82,11 @@ const GameSchema = new Schema(
         damageNum: {
             type: number,
             required: false
+        },
+
+        leaderboardStats: {
+            type: number,
+            required: true
         }
 
     },

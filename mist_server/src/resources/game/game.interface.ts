@@ -18,4 +18,5 @@ export default interface Game extends Document
     itemDescription: string;
     menu: string;
     damageNum: number;
+    leaderboardStats: number;
 }
