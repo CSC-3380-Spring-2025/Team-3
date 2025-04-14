@@ -9,6 +9,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./utils/db";
 import helmet from "helmet";
+import leaderboardRoutes from "./resources/leaderboard/leaderboard.routes";
+
 
 class App{
   public express: Application;
@@ -31,6 +33,7 @@ class App{
     this.express.use(express.json());
     this.express.use(express.urlencoded({ extended: false }));
     this.express.use(compression());
+    this.express.use("/api/leaderboard", leaderboardRoutes);
   }
 
   private initializeControllers(controllers: Controller[]): void {
