@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiRequest } from "@/utils/api";
 
 export default function SignUpPage() {
   const [name, setName] = useState("");
@@ -17,31 +18,28 @@ export default function SignUpPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    // Basic check: confirm passwords match
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    // Skeleton fetch request to your dedicated backend API route
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      const res = await apiRequest("/users/register", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        setError(errorData.message || "Sign-up failed. Please try again.");
-        return;
-      }
-
-      // Redirect to home or dashboard on success
+      // Handle successful signup (e.g., redirect)
+      console.log("Signup successful:", res);
       router.push("/");
-    } catch (err) {
-      console.error(err);
-      setError("An unexpected error occurred during sign-up.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message);
+      } else {
+        console.error("Unexpected error:", err);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   }
 

@@ -7,6 +7,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiRequest } from "@/utils/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -18,23 +19,22 @@ export default function Login() {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await apiRequest("/users/login", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        setError(errorData.message || "An unexpected error occurred. Please try again.");
-        return;
-      }
-
-
+      // Handle successful login (e.g., save token, redirect)
+      console.log("Login successful:", res);
       router.push("/");
-    } catch (err) {
-      console.error(err);
-      setError("Either your email or password is incorrect. Please try again");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error(err);
+        setError(err.message);
+      } else {
+        console.error("Unexpected error:", err);
+        setError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 

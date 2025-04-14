@@ -4,6 +4,7 @@ import HttpException from "@/utils/exceptions/http.exception";
 import validationMiddleware from "@/middleware/validation.middleware";
 import validate from "@/resources/game/game.validation";
 import GameService from "@/resources/game/game.service";
+import authenticated from "@/middleware/authenticated.middleware"; // Import middleware
 
 class GameController implements Controller {
   public path = '/games';
@@ -17,6 +18,7 @@ class GameController implements Controller {
   private initializeRoutes(): void {
     this.router.post(
       `${this.path}`,
+      authenticated, // Ensure user is authenticated
       validationMiddleware(validate.create),
       this.createGame
     );
@@ -30,7 +32,8 @@ class GameController implements Controller {
   ): Promise<void> => {
     try {
       const { title, gameType, data } = req.body;
-      const game = await this.gameService.createGame({ title, gameType, data });
+      const userId = (req.user as { _id: string })?._id;
+      const game = await this.gameService.createGame({ title, gameType, data, userId });
       res.status(201).json({ game });
     } catch (error: any) {
       next(new HttpException(400, error.message));

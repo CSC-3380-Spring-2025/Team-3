@@ -90,7 +90,7 @@ class UserController implements Controller {
             return;
           }
           const userWithGames = await this.UserService.getUserGames(String(req.user._id));
-          res.status(200).json({ games: userWithGames.games });
+          res.status(200).json({ games: userWithGames });
         } catch (error: any) {
           next(new HttpException(400, error.message));
         }
