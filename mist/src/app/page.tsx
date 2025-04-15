@@ -37,7 +37,7 @@ export default function HomePage() {
 
         {/* Play and Program Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-          <Link href="/play">
+          <Link href="/pages/play">
             <button
               style={{
                 fontSize: "3vw",   
@@ -48,7 +48,7 @@ export default function HomePage() {
             </button>
           </Link>
 
-          <Link href="/program">
+          <Link href="/pages/program">
             <button
               style={{
                 fontSize: "3vw",
