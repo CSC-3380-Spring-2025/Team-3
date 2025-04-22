@@ -21,6 +21,38 @@ class GameService {
     }
   }
 
+  getAllGames = async (): Promise<Game[]> => {
+    try {
+      const games = await this.game.find().populate('createdBy', 'name email');
+      return games;
+    } catch (error: any) {
+      throw new Error('Unable to fetch games: ' + error.message);
+    }
+  }
+  getGameById = async (id: string): Promise<Game | null> => {
+    try {
+      const game = await this.game.findById(id).populate('createdBy', 'name email');
+      if (!game) {
+        throw new Error('Game not found');
+      }
+      return game;
+    } catch (error: any) {
+      throw new Error('Unable to fetch game: ' + error.message);
+    }
+  }
+
+  public async deleteGame(id: string): Promise<Game | null> {
+    try {
+      const game = await this.game.findByIdAndDelete(id);
+      if (!game) {
+        throw new Error('Game not found');
+      }
+      return game;
+    } catch (error: any) {
+      throw new Error('Unable to delete game: ' + error.message);
+    }
+  }
+
 }
 
 export default GameService;

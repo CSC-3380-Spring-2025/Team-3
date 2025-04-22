@@ -7,6 +7,9 @@ const GameSchema = new Schema<Game>(
       gameType: { type: String, required: true },
       data: { type: Schema.Types.Mixed, required: true },
       createdBy: { type: Schema.Types.String, ref: 'User', required: true }, // Reference to User
+      createdAt: { type: Date, default: Date.now },
+      updatedAt: { type: Date, default: Date.now },
+      
     },
     { timestamps: true }
   );

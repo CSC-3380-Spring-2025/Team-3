@@ -13,7 +13,25 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDeveloper, setIsDeveloper] = useState(false);
+  const [isGameUser, setIsGameUser] = useState(false);
+  const [isGuest, setIsGuest] = useState(false);
+  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
+  const [userType, setUserType] = useState("");
   const router = useRouter();
+
+
+  // Debugging: Log the state values
+  console.log("isLoggedIn:", isLoggedIn);
+  console.log("isDeveloper:", isDeveloper);
+  console.log("isGameUser:", isGameUser);
+  console.log("isGuest:", isGuest);
+  console.log("Form values:");
+
+  console.log(email, password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,6 +44,22 @@ export default function Login() {
 
       // Handle successful login (e.g., save token, redirect)
       console.log("Login successful:", res);
+      setToken(res.token);
+      setUserId(res.userId);
+      setUserName(res.userName);
+      setUserType(res.userType);
+      setIsLoggedIn(true);
+      setIsDeveloper(res.isDeveloper);
+      setIsGameUser(res.isGameUser);
+      setIsGuest(res.isGuest);
+      console.log("User ID:", res.userId);
+      console.log("User Name:", res.userName);
+      console.log("User Type:", res.userType);
+      console.log("Token:", res.token);
+      console.log("isLoggedIn:", isLoggedIn);
+      console.log("isDeveloper:", isDeveloper);
+      console.log("isGameUser:", isGameUser);
+      console.log("isGuest:", isGuest);
       router.push("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -48,6 +82,9 @@ export default function Login() {
             <h1>ORCA INDUSTRIES</h1>
             <p className="m-0">play, program, create, collaborate</p>
           </div>
+          {/* {true && ()
+
+          } */}
           {/* Right side: Link to Home */}
           <Link href="/">
             <button>Home</button>

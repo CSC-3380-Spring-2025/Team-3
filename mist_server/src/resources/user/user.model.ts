@@ -4,6 +4,19 @@ import User from '@/resources/user/user.interface';
 
 const UserSchema = new Schema<User>(
   {
+    ID: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+    username: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
+
     name: {
       type: String,
       required: true,

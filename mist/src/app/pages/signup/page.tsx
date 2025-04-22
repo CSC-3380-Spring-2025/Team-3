@@ -15,9 +15,10 @@ export default function SignUpPage() {
 
   const router = useRouter();
 
+  console.log(name, email, password)
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
