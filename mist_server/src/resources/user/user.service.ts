@@ -4,9 +4,11 @@ import User from '@/resources/user/user.interface';
 import { Types } from 'mongoose';
 import GameModel from '@/resources/game/game.model'; // Import GameModel
 import Game from '@/resources/game/game.interface'; // Import Game interface
+import {v4 as uuidv4} from 'uuid'; // Import uuid for generating unique IDs
 
 class UserService {
     private user = UserModel;
+
 
     /**
      * Registering a new user
@@ -21,10 +23,14 @@ class UserService {
     ): Promise<string | Error> {
         try {
             const user = await this.user.create({
+                ID: uuidv4(), // Generate a unique ID
+                username: email.split('@')[0], // Use the part before '@' as username
                 name,
                 email,
                 password,
                 role,
+                games: [], // Initialize with an empty array of games
+                
             });
 
             const accessToken = token.createToken(user);
