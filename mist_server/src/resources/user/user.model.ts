@@ -4,12 +4,6 @@ import User from '@/resources/user/user.interface';
 
 const UserSchema = new Schema<User>(
   {
-    ID: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
     username: {
       type: String,
       required: true,
@@ -20,25 +14,57 @@ const UserSchema = new Schema<User>(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
+
     email: {
       type: String,
       required: true,
       unique: true,
       trim: true,
     },
+
     password: {
       type: String,
       required: true,
     },
+
     role: {
       type: String,
       required: true,
     },
+
     games: [{
       type: Schema.Types.ObjectId,
-      ref: 'Game'
-    }]
+      ref: 'Game',
+    }],
+
+    profilePic: {
+      type: String,
+      default: '',
+    },
+
+    bio: {
+      type: String,
+      default: '',
+    },
+
+    gamesCreated: {
+      type: Number,
+      default: 0,
+    },
+
+    totalPlays: {
+      type: Number,
+      default: 0,
+    },
+
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
   },
   { timestamps: true }
 );
