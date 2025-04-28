@@ -9,6 +9,8 @@ const GameSchema = new Schema<Game>(
       createdBy: { type: Schema.Types.String, ref: 'User', required: true }, // Reference to User
       createdAt: { type: Date, default: Date.now },
       updatedAt: { type: Date, default: Date.now },
+      gameId: { type: String, required: true },
+
       
     },
     { timestamps: true }

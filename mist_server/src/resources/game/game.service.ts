@@ -9,6 +9,8 @@ class GameService {
     gameType: string;
     data: any;
     userId: string; // Add userId
+    gameID: string;
+
   }): Promise<Game> {
     try {
       const game = await this.game.create({
