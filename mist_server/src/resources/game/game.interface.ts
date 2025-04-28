@@ -8,4 +8,5 @@ export default interface Game extends Document
     createdBy: string; // Reference to User
     createdAt: Date;
     updatedAt: Date;
+    gameId: string;
 }
