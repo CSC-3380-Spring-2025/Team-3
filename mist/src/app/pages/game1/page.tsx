@@ -2,6 +2,7 @@
 import React from "react";
 import Link from "next/link";
 import Leaderboard from "@/app/COMPONENTS/leaderboard"; 
+import MemoryGame from "@/app/COMPONENTS/MemoryGame";
 
 export default function ArcadePage() {
   return (
@@ -29,19 +30,14 @@ export default function ArcadePage() {
         <h2 className="text-2xl font-bold mb-6">Please Enjoy This Game!</h2>
 
         <div className="flex flex-col lg:flex-row gap-6 items-center justify-center w-full">
-          {/* Game Iframe */}
-          <iframe
-            src="/game1/page"
-            width="320"
-            height="640"
-            style={{ border: "1px solid #ccc" }}
-            className="rounded-md shadow-lg"
-          />
+          {/* Game Component */}
+          <div className="flex justify-center items-center w-full max-w-3xl">
+            <MemoryGame />
+          </div>
 
           {/* Leaderboard */}
           <div className="w-full max-w-md">
-            <Leaderboard gameName="Game
-            " />
+            <Leaderboard gameName="MemoryGame" />
           </div>
         </div>
       </main>

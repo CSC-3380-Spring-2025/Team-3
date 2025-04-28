@@ -26,12 +26,17 @@ export default function SignUpPage() {
     try {
       const res = await apiRequest("/users/register", {
         method: "POST",
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify({ 
+          username: name,   // <<--- change is here
+          email,
+          password,
+          role
+        }),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        console.log("Backend error response:", errorData); // 👈 this line
+        console.log("Backend error response:", errorData); 
         setError(errorData.message || "Sign-up failed. Please try again.");
         return;
       }

@@ -55,16 +55,17 @@ export default function Login() {
       console.log("isLoggedIn:", isLoggedIn);
       console.log("isDeveloper:", isDeveloper);
       console.log("isGameUser:", isGameUser);
-      console.log("isGuest:", isGuest);      const data = await res.json();
-      localStorage.setItem("token", data.token);
+      console.log("isGuest:", isGuest);      
 
-      const payload = JSON.parse(atob(data.token.split('.')[1]));
+      localStorage.setItem("token", res.token);
+
+      const payload = JSON.parse(atob(res.token.split('.')[1]));
       localStorage.setItem("role", payload.role || "player");
 
       if (payload.role === "programmer") {
-        router.push("/programmer-dashboard");
+        router.push("programmer-dashboard");
       } else {
-        router.push("/games");
+        router.push("home");
       }
     } catch (err: unknown) {
       if (err instanceof Error) {

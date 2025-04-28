@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5001/api";
 
 export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
@@ -10,8 +10,16 @@ export async function apiRequest(endpoint: string, options: RequestInit = {}) {
     });
 
     if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "API request failed");
+        let errorMessage = "API request failed";
+
+        try {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+        } catch (err) {
+            console.error("Failed to parse error response", err);
+        }
+
+        throw new Error(errorMessage);
     }
 
     return response.json();
