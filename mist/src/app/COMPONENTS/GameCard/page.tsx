@@ -1,6 +1,6 @@
 import React, {ReactElement} from 'react'
-import { Link } from 'react-router-dom'
-import {Game} from 'types'
+import  Link  from 'next/link'
+import Game from '../../types/game.interface'
 
 interface Props 
 {
