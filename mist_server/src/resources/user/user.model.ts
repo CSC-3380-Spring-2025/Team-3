@@ -6,7 +6,7 @@ const UserSchema = new Schema<User>(
   {
     username: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
       trim: true,
     },
@@ -61,7 +61,7 @@ const UserSchema = new Schema<User>(
 
     slug: {
       type: String,
-      required: true,
+      required: false,
       unique: true,
       trim: true,
     },
