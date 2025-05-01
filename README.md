@@ -1,4 +1,4 @@
-# [Name of the Project] : [Team 3]
+# ORCA Industries : [Team 3]
 # Members
 Project Manager: [Julian Melancon] ([JulianM08])\
 Communications Lead: [Alexis Harvey] ([Alexis-Harvey])\
