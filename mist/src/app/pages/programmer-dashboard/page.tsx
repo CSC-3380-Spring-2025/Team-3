@@ -1,4 +1,5 @@
 "use client";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -16,10 +17,7 @@ export default function ProgrammerDashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-
-   // if (!token || role !== "programmer") {
-     // router.push("/login");
-    //}
+    // if (!token || role !== "programmer") router.push("/login");
   }, [router]);
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {
@@ -31,48 +29,40 @@ export default function ProgrammerDashboard() {
   };
 
   const handleOpenTool = (tool: (typeof tools)[0]) => {
-    if (tool.title === "Profile") {
-      router.push("/pages/profile");
-    } else if (tool.title === "Game Uploader") {
-      router.push("/pages/gameUploader");
-    } else if (tool.title === "Leaderboard Manager") {
-      router.push("/pages/leaderboard-manager"); 
-    } else {
-      router.push(`/programmer/${tool.id}`);
-    }
+    if (tool.title === "Profile") router.push("/pages/profile");
+    else if (tool.title === "Game Uploader") router.push("/pages/gameUploader");
+    else if (tool.title === "Leaderboard Manager") router.push("/pages/leaderboard-manager");
+    else router.push(`/programmer/${tool.id}`);
   };
 
   return (
-    <div className="app-container min-h-screen w-full flex flex-col">
+    <div className="min-h-screen w-full flex flex-col font-sans bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 text-gray-900">
       {/* Header */}
-      <header className="app-header header-font bg-purple-700 text-white p-4">
-  <div className="navbar flex justify-between items-center">
-    <div>
-      <h1>ORCA INDUSTRIES</h1>
-      <p className="m-0">Programmer Dashboard</p>
-    </div>
-    <Link href="/">
-  <button className="btn bg-[#C78EB4] hover:bg-[#b3779e] text-white font py-2 px-4 rounded">
-    Home
-  </button>
-</Link>
-  </div>
-</header>
+      <header className="bg-sky-500 text-white shadow-md sticky top-0 z-50">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-sky-300">
+          <div>
+            <h1 className="text-3xl font-extrabold tracking-wide">ORCA INDUSTRIES</h1>
+            <p className="text-sm text-sky-100">Programmer Dashboard</p>
+          </div>
+          <Link href="/">
+            <button className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-6 py-2 rounded-full shadow-md transition duration-300">Home</button>
+          </Link>
+        </div>
+      </header>
 
       {/* Main */}
-      <main className="main-content flex-grow p-6">
-        {/* Available Tools */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-bold mb-6">Your Tools</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+      <main className="flex-grow p-6">
+        <section className="mb-16">
+          <h2 className="text-4xl font-bold text-blue-900 mb-10 text-center">Your Tools</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {tools.map((tool) => (
-              <div key={tool.id} className="border rounded p-4 shadow-sm">
-                <img src={tool.imageUrl} alt={tool.title} className="w-full h-48 object-cover mb-2" />
-                <h3 className="text-xl font-bold mb-1">{tool.title}</h3>
-                <p className="mb-4">{tool.description}</p>
-                <div className="flex gap-2">
-                  <button onClick={() => handleOpenTool(tool)} className="btn">Open</button>
-                  <button onClick={() => toggleFavorite(tool)} className="btn">
+              <div key={tool.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+                <img src={tool.imageUrl} alt={tool.title} className="w-full h-48 object-cover rounded mb-3" />
+                <h3 className="text-xl font-bold text-sky-800 mb-1">{tool.title}</h3>
+                <p className="text-sky-700 flex-grow">{tool.description}</p>
+                <div className="flex gap-3 mt-4">
+                  <button onClick={() => handleOpenTool(tool)} className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-4 py-2 rounded-full shadow-md transition">Open</button>
+                  <button onClick={() => toggleFavorite(tool)} className="bg-sky-200 hover:bg-sky-300 text-sky-800 px-4 py-2 rounded-full transition">
                     {favorites.some((fav) => fav.id === tool.id) ? "Unfavorite" : "Favorite"}
                   </button>
                 </div>
@@ -81,21 +71,20 @@ export default function ProgrammerDashboard() {
           </div>
         </section>
 
-        {/* Favorite Tools */}
-        <section className="mb-8">
-          <h2 className="text-2xl font-bold mb-6">Favorite Tools</h2>
+        <section className="mb-16">
+          <h2 className="text-4xl font-bold text-blue-900 mb-10 text-center">Favorite Tools</h2>
           {favorites.length === 0 ? (
-            <p>You haven't favorited any tools yet.</p>
+            <p className="text-center text-sky-700">You haven't favorited any tools yet.</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {favorites.map((tool) => (
-                <div key={tool.id} className="border rounded p-4 shadow-sm">
-                  <img src={tool.imageUrl} alt={tool.title} className="w-full h-48 object-cover mb-2" />
-                  <h3 className="text-xl font-bold mb-1">{tool.title}</h3>
-                  <p className="mb-4">{tool.description}</p>
-                  <div className="flex gap-2">
-                    <button onClick={() => handleOpenTool(tool)} className="btn">Open</button>
-                    <button onClick={() => toggleFavorite(tool)} className="btn">Unfavorite</button>
+                <div key={tool.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col">
+                  <img src={tool.imageUrl} alt={tool.title} className="w-full h-48 object-cover rounded mb-3" />
+                  <h3 className="text-xl font-bold text-sky-800 mb-1">{tool.title}</h3>
+                  <p className="text-sky-700 flex-grow">{tool.description}</p>
+                  <div className="flex gap-3 mt-4">
+                    <button onClick={() => handleOpenTool(tool)} className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-4 py-2 rounded-full shadow-md transition">Open</button>
+                    <button onClick={() => toggleFavorite(tool)} className="bg-sky-200 hover:bg-sky-300 text-sky-800 px-4 py-2 rounded-full transition">Unfavorite</button>
                   </div>
                 </div>
               ))}
@@ -105,8 +94,8 @@ export default function ProgrammerDashboard() {
       </main>
 
       {/* Footer */}
-      <footer className="app-footer flex flex-col items-center justify-center p-4 bg-purple-700 text-white">
-        <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
+      <footer className="bg-sky-500 text-white text-center py-10 border-t border-blue-200">
+        <h3 className="text-2xl font-semibold">Tide Talk</h3>
       </footer>
     </div>
   );

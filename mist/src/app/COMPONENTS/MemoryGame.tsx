@@ -16,7 +16,7 @@ function shuffle<T>(array: T[]): T[] {
 export default function MemoryGamePage() {
   const [board, setBoard] = useState<string[]>([]);
   const [visible, setVisible] = useState<boolean[]>(Array(20).fill(false));
-  const [matched, setMatched] = useState<boolean[]>(Array(20).fill(false)); // NEW state for matched cards
+  const [matched, setMatched] = useState<boolean[]>(Array(20).fill(false));
   const [firstSelection, setFirstSelection] = useState<number | null>(null);
   const [moves, setMoves] = useState(0);
   const [timeLeft, setTimeLeft] = useState(45);
@@ -55,7 +55,6 @@ export default function MemoryGamePage() {
     } else {
       setMoves((prev) => prev + 1);
       if (board[firstSelection] === board[index]) {
-        // Match!
         const newMatched = [...matched];
         newMatched[firstSelection] = true;
         newMatched[index] = true;
@@ -67,39 +66,39 @@ export default function MemoryGamePage() {
           setGameActive(false);
         }
       } else {
-        // No match
         setTimeout(() => {
           const resetVisible = [...visible];
           resetVisible[firstSelection] = false;
           resetVisible[index] = false;
           setVisible(resetVisible);
           setFirstSelection(null);
-        }, 1000);
+        }, 800);
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-pink-100 p-6">
-      <h1 className="text-4xl font-bold mb-6 text-pink-600">Memory Game</h1>
-      <div className="grid grid-cols-5 gap-4 mb-6">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 py-10 px-6 font-sans">
+      <h1 className="text-5xl font-extrabold text-blue-900 mb-8 text-center">Memory Match</h1>
+      <div className="grid grid-cols-5 gap-4 mb-8">
         {board.map((card, index) => (
           <button
             key={index}
             onClick={() => handleCardClick(index)}
-            className={`w-20 h-20 text-3xl font-bold rounded-lg shadow 
-              ${matched[index] ? "bg-pink-400 text-white" : visible[index] ? "bg-pink-300" : "bg-white"}
-              hover:bg-pink-200 border-2 border-pink-500`}
+            className={`w-20 h-20 text-3xl font-semibold rounded-xl transition shadow-lg 
+              ${matched[index] ? "bg-pink-500 text-white" : visible[index] ? "bg-pink-300 text-white" : "bg-white text-pink-600"}
+              hover:scale-105 border border-pink-400`}
             disabled={visible[index] || matched[index] || !gameActive}
           >
             {visible[index] || matched[index] ? card : "?"}
           </button>
         ))}
       </div>
-      <div className="text-lg font-semibold text-center">
-        <p>Moves: {moves}</p>
-        <p>Time Left: {timeLeft} seconds</p>
-        {gameMessage && <p className="mt-4 text-pink-600 font-bold">{gameMessage}</p>}
+
+      <div className="text-center text-lg font-medium text-blue-800">
+        <p className="mb-1">Moves: <span className="font-bold">{moves}</span></p>
+        <p className="mb-1">Time Left: <span className="font-bold">{timeLeft} seconds</span></p>
+        {gameMessage && <p className="mt-4 text-xl font-semibold text-pink-600">{gameMessage}</p>}
       </div>
     </div>
   );

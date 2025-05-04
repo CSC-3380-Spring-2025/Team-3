@@ -19,27 +19,13 @@ export default function Login() {
   const [userType, setUserType] = useState("");
   const router = useRouter();
 
-
-  // Debugging: Log the state values
-  console.log("isLoggedIn:", isLoggedIn);
-  console.log("isDeveloper:", isDeveloper);
-  console.log("isGameUser:", isGameUser);
-  console.log("isGuest:", isGuest);
-  console.log("Form values:");
-
-  console.log(email, password);
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
       const res = await apiRequest("/users/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-
-      // Handle successful login (e.g., save token, redirect)
-      console.log("Login successful:", res);
       setToken(res.token);
       setUserId(res.userId);
       setUserName(res.userName);
@@ -48,74 +34,65 @@ export default function Login() {
       setIsDeveloper(res.isDeveloper);
       setIsGameUser(res.isGameUser);
       setIsGuest(res.isGuest);
-      console.log("User ID:", res.userId);
-      console.log("User Name:", res.userName);
-      console.log("User Type:", res.userType);
-      console.log("Token:", res.token);
-      console.log("isLoggedIn:", isLoggedIn);
-      console.log("isDeveloper:", isDeveloper);
-      console.log("isGameUser:", isGameUser);
-      console.log("isGuest:", isGuest);      const data = await res.json();
-      localStorage.setItem("token", data.token);
 
+      const data = await res.json();
+      localStorage.setItem("token", data.token);
       const payload = JSON.parse(atob(data.token.split('.')[1]));
       localStorage.setItem("role", payload.role || "player");
-
-      if (payload.role === "programmer") {
-        router.push("/programmer-dashboard");
-      } else {
-        router.push("/games");
-      }
+      router.push(payload.role === "programmer" ? "/programmer-dashboard" : "/games");
     } catch (err: unknown) {
       if (err instanceof Error) {
         console.error(err);
         setError(err.message);
       } else {
         console.error("Unexpected error:", err);
-        setError("An unexpected error occurred. Please try again..");
+        setError("An unexpected error occurred. Please try again.");
       }
     }
   };
 
   return (
-    <div className="app-container min-h-screen w-full flex flex-col">
-      <header className="app-header">
-        <div className="navbar">
+    <div className="min-h-screen w-full flex flex-col font-sans bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 text-gray-900">
+      {/* Header */}
+      <header className="bg-sky-500 text-white shadow-md sticky top-0 z-50">
+        <div className="flex justify-between items-center px-6 py-4 border-b border-sky-300">
           <div>
-            <h1>ORCA INDUSTRIES</h1>
-            <p className="m-0">play, program, create, collaborate</p>
+            <h1 className="text-3xl font-extrabold tracking-wide">ORCA INDUSTRIES</h1>
+            <p className="text-sm text-sky-100">play, program, create, collaborate</p>
           </div>
-          {/* {true && ()
-
-          } */}
-          {/* Right side: Link to Home */}
           <Link href="/">
-            <button>Home</button>
+            <button className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-6 py-2 rounded-full shadow-md transition duration-300">Home</button>
           </Link>
         </div>
       </header>
 
-      <main className="main-content flex-grow flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
-          {error && <div className="mb-4 text-red-500">{error}</div>}
-
+      {/* Main Content */}
+      <main className="flex-grow flex items-center justify-center py-16 px-4">
+        <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-xl">
+          <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">Log In to Your Pod</h2>
+          {error && <div className="mb-4 text-red-500 text-sm text-center">{error}</div>}
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full border rounded p-2" required />
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full border rounded p-2" required />
-            <button type="submit">Login</button>
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-300" required />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-300" required />
+            <button type="submit" className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-6 py-3 rounded-full shadow-md transition duration-300">Login</button>
           </form>
 
           <div className="mt-4 text-center">
-            <Link href="home">
-              <button>Play as Guest</button>
+            <Link href="/pages/home">
+              <button className="text-blue-600 underline hover:text-blue-800">Play as Guest</button>
             </Link>
           </div>
 
-          <p className="mt-4 text-center">
-            Don’t have an account? <Link href="signup" className="text-blue-600 hover:underline">Sign Up</Link>
+          <p className="mt-6 text-center text-sm text-gray-700">
+            Don’t have an account? <Link href="/pages/signup" className="text-blue-600 hover:underline">Sign Up</Link>
           </p>
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-sky-500 text-white text-center py-6 border-t border-blue-200">
+        <h3 className="text-xl font-semibold">Tide Talk</h3>
+      </footer>
     </div>
   );
 }
