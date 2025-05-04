@@ -26,7 +26,9 @@ class UserController implements Controller {
             this.login
         )
         this.router.get(`${this.path}`, authenticated, this.getUser);
-
+        this.router.get(`${this.path}/me`, authenticated, this.getUser);
+        this.router.get(`${this.path}/me/games`, authenticated, this.getUserGames);
+        this.router.post(`${this.path}/me/games`, authenticated, this.addGameToUser);
     }
 
     private register = async(
@@ -79,7 +81,35 @@ class UserController implements Controller {
         res.status(200).json({user: req.user})
 
         return;
-    } 
+
+    }
+    private getUserGames = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+          if (!req.user) {
+            next(new HttpException(404, 'No logged in user'));
+            return;
+          }
+          const userWithGames = await this.UserService.getUserGames(String(req.user._id));
+          res.status(200).json({ games: userWithGames });
+        } catch (error: any) {
+          next(new HttpException(400, error.message));
+        }
+      }
+
+      private addGameToUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+          if (!req.user) {
+            next(new HttpException(404, 'No logged in user'));
+            return;
+          }
+          const { gameId } = req.body;
+          const updatedUser = await this.UserService.addGameToUser(String(req.user._id), gameId);
+          res.status(200).json({ user: updatedUser });
+        } catch (error: any) {
+          next(new HttpException(400, error.message));
+        }
+      }
+
 }
 
 export default UserController;
