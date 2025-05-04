@@ -54,7 +54,7 @@ export default function Login() {
   return (
     <div className="min-h-screen w-full flex flex-col font-sans bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 text-gray-900">
       {/* Header */}
-      <header className="bg-sky-500 text-white shadow-md sticky top-0 z-50">
+      <header className="bg-[#567c8d] text-white shadow-md sticky top-0 z-50">
         <div className="flex justify-between items-center px-6 py-4 border-b border-sky-300">
           <div>
             <h1 className="text-3xl font-extrabold tracking-wide">ORCA INDUSTRIES</h1>
@@ -74,7 +74,7 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="Email" className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-300" required />
             <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" className="w-full border rounded p-3 focus:outline-none focus:ring-2 focus:ring-blue-300" required />
-            <button type="submit" className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-6 py-3 rounded-full shadow-md transition duration-300">Login</button>
+            <button type="submit" className="bg-[#c08081] hover:bg-[#ebc7c4] text-white px-6 py-3 rounded-full shadow-md transition duration-300">Login</button>
           </form>
 
           <div className="mt-4 text-center">
