@@ -1,59 +1,51 @@
 "use client";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import React, { useState } from "react";
 import Leaderboard from "@/app/COMPONENTS/leaderboard";
 
-type Game = {
-  id: number;
-  title: string;
-  description: string;
-  imageUrl: string;
-};
-
-const featuredGames: Game[] = [
-  {
-    id: 1,
-    title: "Game 1",
-    description: "This is game 1. It’s super fun!",
-    imageUrl: "/images/game1.jpg",
-  },
-  {
-    id: 2,
-    title: "Game 2",
-    description: "This is game 2. It’s even more fun!",
-    imageUrl: "/images/game2.jpg",
-  },
-  {
-    id: 3,
-    title: "Game 3",
-    description: "This is game 3. Don’t miss out!",
-    imageUrl: "/images/game3.jpg",
-  },
+const featuredGames = [
+  { id: 1, title: "Memory Match", description: "Match the cards!", imageUrl: "/images/game1.jpg" },
+  { id: 2, title: "Maze", description: "Find your way through the maze!", imageUrl: "/images/game2.jpg" },
+  { id: 3, title: "Tetris", description: "Stack the blocks and score points!", imageUrl: "/images/game3.jpg" },
 ];
 
-export default function HomePage() {
-  const [favorites, setFavorites] = useState<Game[]>([]);
 
-  const toggleFavorite = (game: Game) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.some((fav) => fav.id === game.id)
-        ? prevFavorites.filter((fav) => fav.id !== game.id)
-        : [...prevFavorites, game]
+export default function GamesPage() {
+  const router = useRouter();
+  const [favorites, setFavorites] = useState<typeof featuredGames>([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+
+   // if (!token || (role !== "player" && role !== "programmer" && role !== "admin")) {
+     // router.push("/login");
+   // }
+ }, [router]);
+
+  const toggleFavorite = (game: (typeof featuredGames)[0]) => {
+    setFavorites((prev) =>
+      prev.some((fav) => fav.id === game.id)
+        ? prev.filter((fav) => fav.id !== game.id)
+        : [...prev, game]
     );
   };
 
   return (
     <div className="app-container min-h-screen w-full flex flex-col">
       {/* Header */}
-      <header className="app-header header-font">
-        <div className="navbar flex justify-between items-center p-4">
+      <header className="app-header header-font bg-blue-600 text-white p-4">
+        <div className="navbar flex justify-between items-center">
           <div>
             <h1>ORCA INDUSTRIES</h1>
-            <p className="m-0">play, program, create, collaborate</p>
+            <p className="m-0">Game Center</p>
           </div>
-          <Link href="login">
-            <button className="btn">Login</button>
-          </Link>
+          <Link href="/">
+  <button className="btn bg-[#C78EB4] hover:bg-[#b3779e] text-white font py-2 px-4 rounded transition">
+    Home
+  </button>
+</Link>
         </div>
       </header>
 
@@ -65,21 +57,15 @@ export default function HomePage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {featuredGames.map((game) => (
               <div key={game.id} className="border rounded p-4 shadow-sm">
-                <img
-                  src={game.imageUrl}
-                  alt={game.title}
-                  className="w-full h-48 object-cover mb-2"
-                />
+                <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover mb-2" />
                 <h3 className="text-xl font-bold mb-1">{game.title}</h3>
                 <p className="mb-4">{game.description}</p>
                 <div className="flex gap-2">
-                <Link href={`/pages/home-game${game.id}`}>
-  <button className="btn">Play Now</button>
-</Link>
+                <Link href={game.title === "Profile" ? "/profile" : `/pages/player-game${game.id}`}>
+                    <button className="btn">Play Now</button>
+                </Link>
                   <button onClick={() => toggleFavorite(game)} className="btn">
-                    {favorites.some((fav) => fav.id === game.id)
-                      ? "Unfavorite"
-                      : "Favorite"}
+                    {favorites.some((fav) => fav.id === game.id) ? "Unfavorite" : "Favorite"}
                   </button>
                 </div>
               </div>
@@ -96,15 +82,11 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
               {favorites.map((game) => (
                 <div key={game.id} className="border rounded p-4 shadow-sm">
-                  <img
-                    src={game.imageUrl}
-                    alt={game.title}
-                    className="w-full h-48 object-cover mb-2"
-                  />
+                  <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover mb-2" />
                   <h3 className="text-xl font-bold mb-1">{game.title}</h3>
                   <p className="mb-4">{game.description}</p>
                   <div className="flex gap-2">
-                    <Link href={`/pages/home-game${game.id}`}>
+                    <Link href={`/pages/player-game${game.id}`}>
                       <button className="btn">Play Now</button>
                     </Link>
                     <button onClick={() => toggleFavorite(game)} className="btn">
@@ -124,16 +106,8 @@ export default function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer
-        className="app-footer flex flex-col items-center justify-center p-4"
-        style={{ backgroundColor: "#1695c3", color: "#fff", textAlign: "center" }}
-      >
+      <footer className="app-footer flex flex-col items-center justify-center p-4 bg-blue-600 text-white">
         <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
-        <div className="flex justify-between w-full max-w-3xl gap-4">
-          <img src="/images/game1.jpg" alt="Game 1" className="w-1/4 h-auto object-cover" />
-          <img src="/images/game2.jpg" alt="Game 2" className="w-1/4 h-auto object-cover" />
-          <img src="/images/game3.jpg" alt="Game 3" className="w-1/4 h-auto object-cover" />
-        </div>
       </footer>
     </div>
   );

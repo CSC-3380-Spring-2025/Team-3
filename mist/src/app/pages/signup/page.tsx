@@ -26,7 +26,16 @@ export default function SignUpPage() {
     try {
       const res = await apiRequest("/users/register", {
         method: "POST",
+<<<<<<< Updated upstream
         body: JSON.stringify({ name, email, password, role }),
+=======
+        body: JSON.stringify({ 
+          username: name,  
+          email,
+          password,
+          role
+        }),
+>>>>>>> Stashed changes
       });
 
       if (!res.ok) {

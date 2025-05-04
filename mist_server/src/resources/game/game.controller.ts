@@ -21,7 +21,7 @@ class GameController implements Controller {
       `${this.path}`,
       authenticated, // Ensure user is authenticated
       validationMiddleware(validate.create),
-      requireRole("programmer"),
+      //requireRole("programmer"),
       this.createGame
     );
     //get, post, delete
