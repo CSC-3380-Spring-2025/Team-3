@@ -19,11 +19,18 @@ Designs and Styles Guide: [https://miro.com/app/board/uXjVIRxeI2o=/]\
 
 # How to Run Dev and Test Environment
 
+
 ## Dependencies
-- List all dependencies here
-- Don't forget to include versions
+- "framer-motion": "^12.7.4",
+- "nanoid": "^5.1.5",
+- "next": "^15.3.0",
+- "react": "^19.0.0",
+- "react-dom": "^19.0.0",
+- "sqlite": "^5.1.1",
+- "sqlite3": "^5.1.7"
+  
 ### Downloading Dependencies
-Describe where to download the dependencies here. Some will likely require a web download. Provide links here. For IDE extensions, make sure your project works with the free version of them, and detail which IDE(s) these are available in. 
+npm install 
 
 ## Commands
 Describe how the commands and process to launch the project on the main branch in such a way that anyone working on the project knows how to check the affects of any code they add.
