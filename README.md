@@ -1,4 +1,4 @@
-# [Name of the Project] : [Team 3]
+# [ORCA Industries] : [Team 3]
 # Members
 Project Manager: [Julian Melancon] ([JulianM08])\
 Communications Lead: [Alexis Harvey] ([Alexis-Harvey])\
@@ -15,8 +15,7 @@ Hello! Our project aims to combine a website aimed at playing games and allowing
 - MacOS
 # Important Links
 Kanban Board: [https://group3kanbanboard.atlassian.net/jira/software/projects/KAN/boards/1?atlOrigin=eyJpIjoiMjNkNTZjYWQwMGQ4NDM0ODg4ZTViNDQ4ODAyOTUxNmMiLCJwIjoiaiJ9]\
-Designs: [link]\
-Styles Guide(s): [link]
+Designs and Styles Guide: []\
 
 # How to Run Dev and Test Environment
 
