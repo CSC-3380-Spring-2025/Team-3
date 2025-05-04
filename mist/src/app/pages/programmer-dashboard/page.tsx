@@ -17,7 +17,6 @@ export default function ProgrammerDashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const role = localStorage.getItem("role");
-    // if (!token || role !== "programmer") router.push("/login");
   }, [router]);
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {

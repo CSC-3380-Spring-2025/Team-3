@@ -25,7 +25,7 @@ export default function ArcadePage() {
         </div>
       </header>
 
-      {/* Main Content: Game + Leaderboard Side-by-Side */}
+      {/* Main Content*/}
       <main className="flex-grow flex flex-col items-center justify-center p-8">
         <h2 className="text-4xl font-bold text-blue-900 mb-10">Please Enjoy This Game!</h2>
 

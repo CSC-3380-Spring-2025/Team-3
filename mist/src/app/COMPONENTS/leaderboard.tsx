@@ -35,13 +35,6 @@ export default function Leaderboard({ gameName }: { gameName: string }) {
       });
   }, [gameName]);
 
-  const getMedal = (rank: number) => {
-    if (rank === 1) return "🥇";
-    if (rank === 2) return "🥈";
-    if (rank === 3) return "🥉";
-    return "";
-  };
-
   return (
     <div className="w-full max-w-lg mx-auto">
       <h2 className="text-center text-xl font-bold mb-4">{gameName} Leaderboard</h2>
@@ -74,9 +67,6 @@ export default function Leaderboard({ gameName }: { gameName: string }) {
                     : ""
                 }
               >
-                <td className="py-2 px-4">
-                  {getMedal(i + 1) || i + 1}
-                </td>
                 <td className="py-2 px-4">{score.player_name}</td>
                 <td className="py-2 px-4">{score.score}</td>
               </motion.tr>
