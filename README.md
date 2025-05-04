@@ -8,7 +8,7 @@ Quality Assurance Tester: [Aaroh Desai] ([AarohD1])
 
 # About Our Software
 
-Hello! Our project aims to combine a website aimed at playing games and allowing developers to upload games to launch their gaming careers. The website itself will operate with a login/ user profile based system, using HTML, CSS, and JavaScript to design our specific needs. From there we are using ______. 
+Hello! Our project aims to combine a website aimed at playing games and allowing developers to upload games to launch their gaming careers. The website itself will operate with a login/ user profile based system, using HTML, CSS, and JavaScript to design our specific needs. From there we are using a stack consisting of Next.js for our front-end framework, Node.js and Express for our back-end API, MongoDB for our database, and JSON Web Tokens for secure authentication. 
 
 ## Platforms Tested on
 - Windows
