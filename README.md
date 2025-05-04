@@ -15,7 +15,7 @@ Hello! Our project aims to combine a website aimed at playing games and allowing
 - MacOS
 # Important Links
 Kanban Board: [https://group3kanbanboard.atlassian.net/jira/software/projects/KAN/boards/1?atlOrigin=eyJpIjoiMjNkNTZjYWQwMGQ4NDM0ODg4ZTViNDQ4ODAyOTUxNmMiLCJwIjoiaiJ9]\
-Designs and Styles Guide: []\
+Designs and Styles Guide: [https://miro.com/app/board/uXjVIRxeI2o=/]\
 
 # How to Run Dev and Test Environment
 
