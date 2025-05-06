@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { apiRequest } from "@/utils/api";
 import Link from "next/link";
 
 const tools = [
@@ -15,8 +16,17 @@ export default function ProgrammerDashboard() {
   const [favorites, setFavorites] = useState<typeof tools>([]);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
+    async function checkAuth() {
+      try {
+        const data = await apiRequest("http://localhost:5001/api/users/me");
+        if (data.user.role !== "programmer") {
+          router.push("/pages/login");
+        }
+      } catch (err) {
+        router.push("/pages/login");
+      }
+    }
+    checkAuth();
   }, [router]);
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {

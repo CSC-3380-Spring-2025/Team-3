@@ -1,14 +1,17 @@
-import { Document, Types } from "mongoose";
+import { Document, Types } from 'mongoose';
 
-export default interface User extends Document {
-  ID: string;
+export type UserDocument = Document & {
+  ID:       string;
   username: string;
-  name: string;
-  email: string;
+  slug?:    string;
+  name:     string;
+  email:    string;
   password: string;
-  role: string;
-  games: Types.ObjectId[]; 
-  isValidPassword(password: string): Promise<boolean>;
-  
+  role:     string;
+  games:    Types.ObjectId[];
+  createdAt?: Date;
+  updatedAt?: Date;
 
-}
+
+  isValidPassword(password: string): Promise<boolean>;
+};

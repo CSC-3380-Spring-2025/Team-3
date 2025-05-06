@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import User from '@/resources/user/user.interface';
+import { UserDocument } from '@/resources/user/user.interface';
 
-const UserSchema = new Schema<User>(
+const UserSchema = new Schema<UserDocument>(
   {
     ID: {
       type: String,
@@ -16,7 +16,12 @@ const UserSchema = new Schema<User>(
       unique: true,
       trim: true,
     },
-
+    slug: {
+      type: String,
+      required: false,
+      trim: true,
+      default: '',
+    },
     name: {
       type: String,
       required: true,
@@ -35,23 +40,26 @@ const UserSchema = new Schema<User>(
       type: String,
       required: true,
     },
-    games: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Game'
-    }]
+    games: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Game',
+      },
+    ],
   },
   { timestamps: true }
 );
 
-UserSchema.pre<User>('save', async function (next) {
-  if (!this.isModified('password')) return next();
-  const hash = await bcrypt.hash(this.password, 10);
-  this.password = hash;
-  next();
+UserSchema.pre<UserDocument>('save', async function (this: UserDocument) {
+  if (!this.isModified('password')) return;
+  this.password = await bcrypt.hash(this.password, 10);
 });
 
-UserSchema.methods.isValidPassword = async function (password: string): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
+UserSchema.methods.isValidPassword = async function (
+  this: UserDocument,
+  password: string
+): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
 };
 
-export default model<User>('User', UserSchema);
+export default model<UserDocument>('User', UserSchema);

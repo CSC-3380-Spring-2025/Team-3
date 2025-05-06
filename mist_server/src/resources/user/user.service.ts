@@ -1,197 +1,103 @@
-import UserModel from '@/resources/user/user.model';
-import token from '@/utils/token';
-import User from '@/resources/user/user.interface';
 import { Types } from 'mongoose';
-import GameModel from '@/resources/game/game.model'; // Import GameModel
-import Game from '@/resources/game/game.interface'; // Import Game interface
-import {v4 as uuidv4} from 'uuid'; // Import uuid for generating unique IDs
+import UserModel from '@/resources/user/user.model';
+import type { UserDocument } from '@/resources/user/user.interface';
+import token from '@/utils/token';
+import GameModel from '@/resources/game/game.model';
+import type Game from '@/resources/game/game.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 class UserService {
-    private user = UserModel;
+  private user = UserModel;
+
+  /** Register a brand new user */
+  public async register(
+    name: string,
+    email: string,
+    password: string,
+    role: string
+  ): Promise<string> {
+    const existing = await this.user.findOne({ email });
+    if (existing) throw new Error('Email already in use');
+
+    const prefix = email.split('@')[0];
+    const uniqueUsername = `${prefix}-${uuidv4().slice(0, 8)}`;
+
+    const userDoc = await this.user.create({
+      ID:       uuidv4(),
+      username: uniqueUsername,
+      name,
+      email,
+      password,
+      role,
+      games:    [],
+    } as Partial<UserDocument>);
+
+    return token.createToken(userDoc);
+  }
+
+  
+  public async login(email: string, password: string): Promise<string> {
+    const userDoc = (await this.user.findOne({ email })) as UserDocument | null;
+    if (!userDoc) throw new Error('Cannot find this email');
 
 
-    /**
-     * Registering a new user
-     */
-
-    public async register(
-        name: string,
-        email: string,
-        password: string,
-        role: string,
-    
-    ): Promise<string | Error> {
-        try {
-            const user = await this.user.create({
-                ID: uuidv4(), // Generate a unique ID
-                username: email.split('@')[0], // Use the part before '@' as username
-                name,
-                email,
-                password,
-                role,
-                games: [], // Initialize with an empty array of games
-                
-            });
-
-            const accessToken = token.createToken(user);
-
-            return accessToken;
-        } catch (error) {
-            throw new Error('unable to make user');
-        }
+    if (!await userDoc.isValidPassword(password)) {
+      throw new Error('Incorrect password');
     }
 
-    /**
-     * login a user
-     */
+    return token.createToken(userDoc);
+  }
 
-    public async login(
-        email: string,
-        password: string,
-    ): Promise<string | Error> {
-        try {
-            const user = await this.user.findOne({ email });
-            if (!user) {
-                throw new Error('Cannot find this email');
-            }
+  
+  public async getUser(userId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    return userDoc;
+  }
 
-            if (await user.isValidPassword(password)) {
-                return token.createToken(user);
-            } else {
-                throw new Error('Incorrect password');
-            }
-        } catch (error) {
-            throw new Error('unable to log in user');
-        }
-    }
-    /**
-     * Get user information
-     */
-    public async getUser(userId: string): Promise<User | Error> {
-        try {
-            const user = await this.user.findById(userId);
-            if (!user) {
-                throw new Error('User not found');
-            }
-            return user;
-        } catch (error) {
-            throw new Error('Unable to retrieve user');
-        }
+  
+  public async getAllUsers(): Promise<UserDocument[]> {
+    return this.user.find() as Promise<UserDocument[]>;
+  }
 
-    }
-    /**
-     * Get all users
-     */
-    public async getAllUsers(): Promise<User[]> {
-        try {
-            const users = await this.user.find();
-            return users;
-        } catch (error) {
-            throw new Error('Unable to retrieve users');
-        }
-    }
+  
+  public async getUserGames(userId: string): Promise<Game[]> {
+    return GameModel.find({ createdBy: userId });
+  }
 
-    /**
-     * Add a game to a user
-     */
-    public async addGameToUser(userId: string, gameId: string): Promise<User | Error> {
-        try {
-            const user = await this.user.findById(userId);
-            if (!user) {
-                throw new Error('User not found');
-            }
-            user.games.push(new Types.ObjectId(gameId));
-            await user.save();
-            return user;
-        } catch (error) {
-            throw new Error('Unable to add game to user');
-        }
-    }
-    /**
-     * Get all games created by a user
-     */
+  
+  public async addGameToUser(userId: string, gameId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    userDoc.games.push(new Types.ObjectId(gameId));
+    await userDoc.save();
+    return userDoc;
+  }
 
-    public async getUserGames(userId: string): Promise<Game[]> {
-        const games = await GameModel.find({ createdBy: userId }); // Fetch games by user
-        return games;
-    }
-    /**
-     * Get all games associated with a user
-     */
-    // public async getUserAssociatedGames(userId: string): Promise<Game[]> {
-    //     const user = await this.user.findById(userId).populate('games'); // Populate games field
-    //     if (!user) {
-    //         throw new Error('User not found');
-    //     }
-    //     return user.games as Game[]; // Return populated games
-    // }
+  
+  public async deleteUser(userId: string): Promise<void> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    await userDoc.deleteOne();
+  }
 
+  
+  public async updateUser(userId: string, data: Partial<UserDocument>): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    Object.assign(userDoc, data);
+    await userDoc.save();
+    return userDoc;
+  }
 
-
-
-    /**
-     * Delete a user
-     */
-    public async deleteUser(userId: string): Promise<void> {
-        try {
-            const user = await this.user.findById(userId);
-            if (!user) {
-                throw new Error('User not found');
-            }
-            await user.deleteOne();
-        } catch (error) {
-            throw new Error('Unable to delete user');
-        }
-    }
-    /**
-     * Update a user
-     */
-    public async updateUser(userId: string, data: Partial<User>): Promise<User | Error> {
-        try {
-            const user = await this.user.findById(userId);
-            if (!user) {
-                throw new Error('User not found');
-            }
-            Object.assign(user, data);
-            await user.save();
-            return user;
-        } catch (error) {
-            throw new Error('Unable to update user');
-        }
-    }
-
-    /**
-     * Delete a game from a user
-     */
-    public async deleteGameFromUser(userId: string, gameId: string): Promise<User | Error> {
-        try {
-            const user = await this.user.findById(userId);
-            if (!user) {
-                throw new Error('User not found');
-            }
-            user.games = user.games.filter((game: Types.ObjectId) => game.toString() !== gameId);
-            await user.save();
-            return user;
-        } catch (error) {
-            throw new Error('Unable to delete game from user');
-        }
-    }
-
-    // public async getAllGamesOfUser(userId: string): Promise<Game[] | Error> {
-    //     try {
-    //         const user = await this.user.findById(userId).populate('games');
-    //         if (!user) {
-    //             throw new Error('User not found');
-    //         }
-    //         return user.games as Game[];
-    //     } catch (error) {
-    //         throw new Error('Unable to retrieve games of user');
-    //     }
-    // }
-
-
-    
-
+  
+  public async deleteGameFromUser(userId: string, gameId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    userDoc.games = userDoc.games.filter((g) => g.toString() !== gameId);
+    await userDoc.save();
+    return userDoc;
+  }
 }
 
 export default UserService;
