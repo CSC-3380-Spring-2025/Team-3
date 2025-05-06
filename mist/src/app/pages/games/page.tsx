@@ -7,9 +7,15 @@ import Leaderboard from "@/app/COMPONENTS/leaderboard";
 import { apiRequest } from "@/utils/api";
 
 const featuredGames = [
-  { id: 1, title: "Memory Match", description: "Match the cards!", imageUrl: "/images/game1.jpg" },
-  { id: 2, title: "Maze", description: "Find your way through the maze!", imageUrl: "/images/game2.jpg" },
-  { id: 3, title: "Tetris", description: "Stack the blocks and score points!", imageUrl: "/images/game3.jpg" },
+  { id: 1, title: "Memory Match", description: "Match the cards!", 
+    //imageUrl: "/images/game1.jpg" 
+  },
+  { id: 2, title: "Maze", description: "Find your way through the maze!", 
+    //imageUrl: "/images/game2.jpg" 
+  },
+  { id: 3, title: "Tetris", description: "Stack the blocks and score points!", 
+    //imageUrl: "/images/game3.jpg" 
+  },
 ];
 
 export default function GamesPage() {
@@ -91,7 +97,7 @@ export default function GamesPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {featuredGames.map((game) => (
               <div key={game.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col">
-                <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover rounded mb-3" />
+            {/* <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover rounded mb-3" /> */}
                 <h3 className="text-xl font-bold text-sky-800 mb-1">{game.title}</h3>
                 <p className="text-sky-700 flex-grow">{game.description}</p>
                 <div className="flex gap-3 mt-4">
@@ -119,7 +125,7 @@ export default function GamesPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
               {favorites.map((game) => (
                 <div key={game.id} className="bg-white rounded-xl shadow-lg p-4 flex flex-col">
-                  <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover rounded mb-3" />
+                  {/* <img src={game.imageUrl} alt={game.title} className="w-full h-48 object-cover rounded mb-3" /> */}
                   <h3 className="text-xl font-bold text-sky-800 mb-1">{game.title}</h3>
                   <p className="text-sky-700 flex-grow">{game.description}</p>
                   <div className="flex gap-3 mt-4">

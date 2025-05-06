@@ -13,13 +13,13 @@ export default function LeaderboardManagerPage() {
     async function fetchLeaderboard() {
       try {
         const data = await apiRequest("/api/leaderboard/all-scores?game_name=All Games");
-        const data = await res.json();
-        setLeaderboard(data);
+        setLeaderboard(data.top_scores); 
       } catch (err) {
         console.error("Failed to load leaderboard.", err);
       }
     }
-    setLeaderboard(data.top_scores);
+  
+    fetchLeaderboard();
   }, []);
 
   const handleDelete = async (id: number) => {

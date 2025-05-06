@@ -28,11 +28,17 @@ export default function LoginPage() {
       localStorage.setItem("token", token);
       localStorage.setItem("role", userRole ?? "player");
 
-      if (userRole === "programmer") {
-        router.push("/pages/programmer-dashboard");
-      } else {
-        router.push("/pages/games");
-      }
+      console.log("Token stored:", localStorage.getItem("token"));
+      console.log("Role stored:", localStorage.getItem("role"));
+
+      setTimeout(() => {
+        console.log("User role is:", userRole);
+        if (userRole === "programmer") {
+          router.push("/pages/programmer-dashboard");
+        } else {
+          router.push("/pages/games");
+        }
+          }, 500); 
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Login failed. Please try again.");
@@ -61,22 +67,26 @@ export default function LoginPage() {
           {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Email"
-            required
-            className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
           />
 
           <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            required
-            className="w-full border rounded p-3 mb-6 focus:ring-2 focus:ring-blue-300"
-          />
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              className="w-full border rounded p-3 mb-6 focus:ring-2 focus:ring-blue-300"
+            />
 
           <button
             type="submit"

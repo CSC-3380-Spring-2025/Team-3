@@ -20,12 +20,14 @@ export default function ProgrammerDashboard() {
     async function checkAuth() {
       try {
         const data = await apiRequest("/api/users/me"); 
-        if (data.user.role !== "programmer") {
+        console.log("User role is:", data.role);
+        if (data.role !== "programmer") {
           router.push("/pages/login");
         } else {
           setLoading(false); 
         }
       } catch (err) {
+        console.error("Auth check failed:", err);
         router.push("/pages/login");
       }
     }

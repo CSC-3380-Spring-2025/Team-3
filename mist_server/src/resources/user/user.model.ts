@@ -37,7 +37,7 @@ const UserSchema = new Schema<UserDocument>(
 
     role: {
       type: String,
-      enum: ['programmer', 'player'],
+      enum: ["programmer", "player"],
       required: true,
     },
     games: [

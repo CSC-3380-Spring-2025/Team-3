@@ -36,16 +36,17 @@ class UserService {
   }
 
   
-  public async login(email: string, password: string): Promise<string> {
-    const userDoc = (await this.user.findOne({ email })) as UserDocument | null;
-    if (!userDoc) throw new Error('Cannot find this email');
-
-
-    if (!await userDoc.isValidPassword(password)) {
-      throw new Error('Incorrect password');
-    }
-
-    return token.createToken(userDoc);
+  public async login(email: string, password: string): Promise<{ token: string, role: string }> {
+    const userDoc = await this.user.findOne({ email });
+  
+    if (!userDoc) throw new Error("User not found");
+  
+    const isMatch = await userDoc.isValidPassword(password);
+    if (!isMatch) throw new Error("Invalid credentials");
+  
+    const jwt = token.createToken(userDoc);
+  
+    return { token: jwt, role: userDoc.role }; 
   }
 
   
