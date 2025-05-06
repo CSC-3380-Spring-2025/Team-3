@@ -24,12 +24,12 @@ export default function ArcadePage() {
         </div>
       </header>
 
-      {/* Main Content: Game + Leaderboard Side-by-Side */}
+      {/* Main Content*/}
       <main className="main-content flex-grow flex flex-col items-center justify-center p-6">
         <h2 className="text-2xl font-bold mb-6">Please Enjoy This Game!</h2>
 
         <div className="flex flex-col lg:flex-row gap-6 items-center justify-center w-full">
-          {/* Game Iframe */}
+          {/* Game frame */}
           <iframe
             src="/game1/page"
             width="320"

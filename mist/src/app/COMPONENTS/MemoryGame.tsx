@@ -16,6 +16,7 @@ function shuffle<T>(array: T[]): T[] {
 export default function MemoryGamePage() {
   const [board, setBoard] = useState<string[]>([]);
   const [visible, setVisible] = useState<boolean[]>(Array(20).fill(false));
+  const [matched, setMatched] = useState<boolean[]>(Array(20).fill(false));
   const [firstSelection, setFirstSelection] = useState<number | null>(null);
   const [moves, setMoves] = useState(0);
   const [timeLeft, setTimeLeft] = useState(45);
@@ -43,7 +44,7 @@ export default function MemoryGamePage() {
   }, []);
 
   const handleCardClick = (index: number) => {
-    if (!gameActive || visible[index]) return;
+    if (!gameActive || visible[index] || matched[index]) return;
 
     const newVisible = [...visible];
     newVisible[index] = true;
@@ -54,44 +55,50 @@ export default function MemoryGamePage() {
     } else {
       setMoves((prev) => prev + 1);
       if (board[firstSelection] === board[index]) {
-        // Match
+        const newMatched = [...matched];
+        newMatched[firstSelection] = true;
+        newMatched[index] = true;
+        setMatched(newMatched);
         setFirstSelection(null);
-        if (newVisible.every((v) => v)) {
+
+        if (newMatched.every((v) => v)) {
           setGameMessage(`You won in ${moves + 1} moves!`);
           setGameActive(false);
         }
       } else {
-        // No match
         setTimeout(() => {
-          const resetVisible = [...newVisible];
+          const resetVisible = [...visible];
           resetVisible[firstSelection] = false;
           resetVisible[index] = false;
           setVisible(resetVisible);
           setFirstSelection(null);
-        }, 1000);
+        }, 800);
       }
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-blue-50 p-6">
-      <h1 className="text-3xl font-bold mb-4">Memory Game</h1>
-      <div className="grid grid-cols-5 gap-4 mb-6">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 py-10 px-6 font-sans">
+      <h1 className="text-5xl font-extrabold text-blue-900 mb-8 text-center">Memory Match</h1>
+      <div className="grid grid-cols-5 gap-4 mb-8">
         {board.map((card, index) => (
           <button
             key={index}
             onClick={() => handleCardClick(index)}
-            className="w-16 h-16 text-2xl font-bold border rounded-lg bg-white shadow hover:bg-blue-100"
-            disabled={visible[index] || !gameActive}
+            className={`w-20 h-20 text-3xl font-semibold rounded-xl transition shadow-lg 
+              ${matched[index] ? "bg-pink-500 text-white" : visible[index] ? "bg-pink-300 text-white" : "bg-white text-pink-600"}
+              hover:scale-105 border border-pink-400`}
+            disabled={visible[index] || matched[index] || !gameActive}
           >
-            {visible[index] ? card : "?"}
+            {visible[index] || matched[index] ? card : "?"}
           </button>
         ))}
       </div>
-      <div className="text-lg font-semibold">
-        <p>Moves: {moves}</p>
-        <p>Time Left: {timeLeft} seconds</p>
-        {gameMessage && <p className="mt-4 text-red-600">{gameMessage}</p>}
+
+      <div className="text-center text-lg font-medium text-blue-800">
+        <p className="mb-1">Moves: <span className="font-bold">{moves}</span></p>
+        <p className="mb-1">Time Left: <span className="font-bold">{timeLeft} seconds</span></p>
+        {gameMessage && <p className="mt-4 text-xl font-semibold text-pink-600">{gameMessage}</p>}
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ class GameController implements Controller {
       authenticated,
       upload.single("gameFile"),         // <-- handle multipart/form-data
       validationMiddleware(validate.create),
-      requireRole("programmer"),
+      //requireRole("programmer"),
       this.createGame
     );
 
