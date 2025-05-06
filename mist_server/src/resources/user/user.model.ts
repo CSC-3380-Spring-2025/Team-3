@@ -10,7 +10,12 @@ const UserSchema = new Schema<User>(
       unique: true,
       trim: true,
     },
-
+    slug: {
+      type: String,
+      required: false,
+      trim: true,
+      default: '',
+    },
     name: {
       type: String,
       required: true,
@@ -33,38 +38,12 @@ const UserSchema = new Schema<User>(
       type: String,
       required: true,
     },
-
-    games: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Game',
-    }],
-
-    profilePic: {
-      type: String,
-      default: '',
-    },
-
-    bio: {
-      type: String,
-      default: '',
-    },
-
-    gamesCreated: {
-      type: Number,
-      default: 0,
-    },
-
-    totalPlays: {
-      type: Number,
-      default: 0,
-    },
-
-    slug: {
-      type: String,
-      required: false,
-      unique: true,
-      trim: true,
-    },
+    games: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Game',
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -1,11 +1,10 @@
-// start.js script to ensure uniform startup
-const { execSync } = require('child_process');
+toFile = false; 
+const { execSync, spawn } = require('child_process');
 
 function runCommand(command) {
   console.log(`\nRunning: ${command}`);
   try {
-    // { shell: true } should make this work cross-platform
-    execSync(command, { stdio: 'inherit', shell: true });
+    execSync(command, { stdio: 'inherit' });
   } catch (error) {
     console.error(`Error while running command: ${command}`);
     process.exit(1);
@@ -14,21 +13,27 @@ function runCommand(command) {
 
 console.log('Starting development workflow...');
 
-//making sure it's all up to date
 runCommand('git pull');
 
-//Start Docker Compose (make sure Docker & Docker Compose are installed)
 runCommand('docker-compose up -d');
 
-/*Install npm dependencies (need node version >= 18 I think, but y'all shouldve had it done 
-automatically)*/
 runCommand('npm install');
 
-//Starts server, navigate to http://localhost:3000 to view in browser (I think)
-runCommand('npm run dev')
+deployServers();
 
-//Build the Next.js project (For production)
-//runCommand('npm run build');
+function deployServers() {
 
-//Start the production server
-//runCommand('npm start');
+  console.log('Starting backend (Express) in mist_server/ ...');
+  spawn('npm', ['run', 'dev'], {
+    cwd: 'mist_server',
+    shell: true,
+    stdio: 'inherit',
+  });
+
+  console.log('Starting frontend (Next.js) in mist/ ...');
+  spawn('npm', ['run', 'dev'], {
+    cwd: 'mist',
+    shell: true,
+    stdio: 'inherit',
+  });
+}

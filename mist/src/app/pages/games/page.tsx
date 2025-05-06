@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Leaderboard from "@/app/COMPONENTS/leaderboard";
+import { apiRequest } from "@/utils/api";
 
 const featuredGames = [
   { id: 1, title: "Memory Match", description: "Match the cards!", imageUrl: "/images/game1.jpg" },
@@ -17,9 +18,17 @@ export default function GamesPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const role = localStorage.getItem("role");
-    // if (!token || (role !== "player" && role !== "programmer" && role !== "admin")) router.push("/login");
+    async function checkAuth() {
+      try {
+        const data = await apiRequest("http://localhost:5001/api/users/me");
+        if (data.user.role !== "programmer") {
+          router.push("/pages/login");
+        }
+      } catch (err) {
+        router.push("/pages/login");
+      }
+    }
+    checkAuth();
   }, [router]);
 
   const toggleFavorite = (game: (typeof featuredGames)[0]) => {

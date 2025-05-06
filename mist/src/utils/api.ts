@@ -1,26 +1,38 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5001/api";
+export interface ApiRequestOptions extends RequestInit {
+  skipAuth?: boolean;
+  headers?: HeadersInit;
+}
 
-export async function apiRequest(endpoint: string, options: RequestInit = {}) {
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers: {
-            "Content-Type": "application/json",
-            ...(options.headers || {}),
-        },
-    });
+export async function apiRequest(
+  endpoint: string,
+  options: ApiRequestOptions = {}
+): Promise<any> {
+  const { skipAuth, headers: customHeaders, ...fetchOpts } = options;
 
-    if (!response.ok) {
-        let errorMessage = "API request failed";
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...(customHeaders as Record<string, string>),
+  };
 
-        try {
-            const errorData = await response.json();
-            errorMessage = errorData.message || errorData.error || errorMessage;
-        } catch (err) {
-            console.error("Failed to parse error response", err);
-        }
-
-        throw new Error(errorMessage);
+  if (!skipAuth) {
+    const token = typeof window !== "undefined"
+      ? localStorage.getItem("token")
+      : null;
+    if (token) {
+      (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
     }
+  }
 
-    return response.json();
+  const response = await fetch(endpoint, {
+    ...fetchOpts,
+    headers,
+    credentials: "include",
+  });
+
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+  if (!response.ok) {
+    throw new Error(data?.error || response.statusText);
+  }
+  return data;
 }
