@@ -14,8 +14,10 @@ export default function SignUpPage() {
   const [error, setError]                 = useState<string>("");
   const router = useRouter();
 
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     setError("");
 
     if (!name.trim()) {
@@ -26,9 +28,14 @@ export default function SignUpPage() {
       setError("Passwords do not match.");
       return;
     }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
 
     try {
-      const { token, role: userRole } = await apiRequest("http://localhost:5001/api/users/register", {
+      // Send the sign-up request
+      const { token, role: userRole } = await apiRequest("/api/users/register", {
         skipAuth: true,
         method: "POST",
         body: JSON.stringify({ name, email, password, role }),
@@ -36,6 +43,8 @@ export default function SignUpPage() {
       console.log (token);
       localStorage.setItem("token", token);
       localStorage.setItem("role", userRole || "player");
+      router.push(userRole === "programmer" ? "/pages/programmer-dashboard" : "/pages/games")
+
 
       // if (userRole === "programmer") {
       //   router.push("/pages/programmer-dashboard");
@@ -47,6 +56,11 @@ export default function SignUpPage() {
       setError(err.message || "Sign-up failed. Please try again.");
     }
   };
+
+  
+  console.log("data", name, email, password, confirmPassword, role);
+
+  console.log("error", error);
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50">

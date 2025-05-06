@@ -1,10 +1,10 @@
 import { Request, Response, NextFunction, Router } from 'express';
-import { Types } from "mongoose";
-import Controller from "@/utils/interfaces/controller.interface";
-import HttpException from "@/utils/exceptions/http.exception";
-import validationMiddleware from "@/middleware/validation.middleware";
+import { Types } from 'mongoose';
+import Controller from '@/utils/interfaces/controller.interface';
+import HttpException from '@/utils/exceptions/http.exception';
+import validationMiddleware from '@/middleware/validation.middleware';
 import validate from '@/resources/user/user.validation';
-import UserService from "@/resources/user/user.service";
+import UserService from '@/resources/user/user.service';
 import authenticated from '@/middleware/authenticated.middleware';
 
 type RequestWithUser = Request & { user?: { _id: Types.ObjectId; [key: string]: any } };
@@ -19,27 +19,44 @@ export default class UserController implements Controller {
   }
 
   private initializeRoutes(): void {
+    // Public routes
     this.router.post(
       '/register',
       validationMiddleware(validate.register),
       this.register.bind(this)
     );
+
     this.router.post(
-      '/pages/login',
+      '/login',
       validationMiddleware(validate.login),
       this.login.bind(this)
     );
 
+    // Protect all routes below
     this.router.use(authenticated);
+
+    // Protected routes
     this.router.get('/me', this.getCurrentUser.bind(this));
     this.router.get('/me/games', this.getUserGames.bind(this));
     this.router.post('/me/games', this.addGameToUser.bind(this));
   }
 
-  private async register(req: Request, res: Response, next: NextFunction): Promise<void> {
+  private async register(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     console.log('[Register] hit /users/register with body:', req.body);
     try {
       const { name, email, password, role } = req.body;
+      const token = await this.userService.register(
+        name,
+        email,
+        password,
+        role
+      );
+      // Return token and the assigned role
+      res.status(201).json({ token, role });
     } catch (error: any) {
       console.error('[Register] error before send:', error);
       next(new HttpException(400, error.message));
@@ -102,7 +119,10 @@ export default class UserController implements Controller {
         return next(new HttpException(404, 'No logged-in user'));
       }
       const { gameId } = req.body;
-      const updatedUser = await this.userService.addGameToUser(userId, gameId);
+      const updatedUser = await this.userService.addGameToUser(
+        userId,
+        gameId
+      );
       res.status(200).json({ user: updatedUser });
     } catch (error: any) {
       next(new HttpException(400, error.message));

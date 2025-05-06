@@ -19,7 +19,7 @@ export default function Leaderboard({ gameName }: { gameName: string }) {
     async function loadScores() {
       try {
         const body = await apiRequest(
-          `http://localhost:5001/api/leaderboard/all-scores?game_name=${encodeURIComponent(
+          `http://localhost:5000/api/leaderboard/all-scores?game_name=${encodeURIComponent(
             gameName
           )}`
         );

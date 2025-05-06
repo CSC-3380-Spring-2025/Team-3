@@ -18,7 +18,7 @@ export default function ProgrammerDashboard() {
   useEffect(() => {
     async function checkAuth() {
       try {
-        const data = await apiRequest("http://localhost:5001/api/users/me");
+        const data = await apiRequest("http://localhost:5000/api/users/me");
         if (data.user.role !== "programmer") {
           router.push("/pages/login");
         }

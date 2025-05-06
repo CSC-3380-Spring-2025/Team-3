@@ -29,10 +29,23 @@ export async function apiRequest(
     credentials: "include",
   });
 
+  const contentType = response.headers.get("content-type") || "";
   const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
+
+  // If error status, throw before parsing
   if (!response.ok) {
-    throw new Error(data?.error || response.statusText);
+    // if JSON, pull the error field; otherwise pass the raw text
+    if (contentType.includes("application/json")) {
+      const errData = JSON.parse(text);
+      throw new Error(errData.error || JSON.stringify(errData));
+    } else {
+      throw new Error(text || response.statusText);
+    }
   }
-  return data;
+
+  // success: if JSON, parse it; otherwise return raw text
+  if (contentType.includes("application/json")) {
+    return JSON.parse(text);
+  }
+  return text;
 }

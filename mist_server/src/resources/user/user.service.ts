@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import UserModel from '@/resources/user/user.model';
-import type user from '@/resources/user/user.interface';
+import type {UserDocument} from '@/resources/user/user.interface';
 import token from '@/utils/token';
 import GameModel from '@/resources/game/game.model';
 import type Game from '@/resources/game/game.interface';
