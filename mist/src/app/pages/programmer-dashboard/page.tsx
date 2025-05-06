@@ -13,14 +13,17 @@ const tools = [
 
 export default function ProgrammerDashboard() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [favorites, setFavorites] = useState<typeof tools>([]);
 
   useEffect(() => {
     async function checkAuth() {
       try {
-        const data = await apiRequest("http://localhost:5000/api/users/me");
+        const data = await apiRequest("/api/users/me"); 
         if (data.user.role !== "programmer") {
           router.push("/pages/login");
+        } else {
+          setLoading(false); 
         }
       } catch (err) {
         router.push("/pages/login");
@@ -28,6 +31,10 @@ export default function ProgrammerDashboard() {
     }
     checkAuth();
   }, [router]);
+
+  if (loading) {
+    return <div className="text-center mt-10 text-blue-800">Loading dashboard...</div>;
+  }
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {
     setFavorites((prev) =>

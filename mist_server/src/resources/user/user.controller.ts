@@ -22,7 +22,7 @@ export default class UserController implements Controller {
     // Public routes
     this.router.post(
       '/register',
-      validationMiddleware(validate.register),
+     // validationMiddleware(validate.register),
       this.register.bind(this)
     );
 
@@ -46,19 +46,14 @@ export default class UserController implements Controller {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    console.log('[Register] hit /users/register with body:', req.body);
+    console.log("[REGISTER] Request body:", req.body); 
+  
     try {
       const { name, email, password, role } = req.body;
-      const token = await this.userService.register(
-        name,
-        email,
-        password,
-        role
-      );
-      // Return token and the assigned role
+      const token = await this.userService.register(name, email, password, role);
       res.status(201).json({ token, role });
     } catch (error: any) {
-      console.error('[Register] error before send:', error);
+      console.error("[REGISTER ERROR]", error); 
       next(new HttpException(400, error.message));
     }
   }

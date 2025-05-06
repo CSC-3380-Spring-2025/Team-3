@@ -1,29 +1,40 @@
+
 export interface ApiRequestOptions extends RequestInit {
   skipAuth?: boolean;
   headers?: HeadersInit;
 }
 
-export async function apiRequest(
+
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001";
+
+/**
+ * Sends an API request with optional auth token and JSON handling.
+ * @param endpoint - API route (e.g. "/api/users/register")
+ * @param options - fetch options with optional skipAuth and custom headers
+ * @returns Parsed response body or raw text
+ */
+export async function apiRequest<T = any>(
   endpoint: string,
   options: ApiRequestOptions = {}
-): Promise<any> {
+): Promise<T> {
   const { skipAuth, headers: customHeaders, ...fetchOpts } = options;
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(customHeaders as Record<string, string>),
   };
+  
+  if (customHeaders && typeof customHeaders === "object" && !Array.isArray(customHeaders)) {
+    Object.assign(headers, customHeaders);
+  }
 
   if (!skipAuth) {
-    const token = typeof window !== "undefined"
-      ? localStorage.getItem("token")
-      : null;
+    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
     if (token) {
-      (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
+      headers["Authorization"] = `Bearer ${token}`;
     }
   }
 
-  const response = await fetch(endpoint, {
+  const response = await fetch(`${API_BASE}${endpoint}`, {
     ...fetchOpts,
     headers,
     credentials: "include",
@@ -32,9 +43,7 @@ export async function apiRequest(
   const contentType = response.headers.get("content-type") || "";
   const text = await response.text();
 
-  // If error status, throw before parsing
   if (!response.ok) {
-    // if JSON, pull the error field; otherwise pass the raw text
     if (contentType.includes("application/json")) {
       const errData = JSON.parse(text);
       throw new Error(errData.error || JSON.stringify(errData));
@@ -43,9 +52,5 @@ export async function apiRequest(
     }
   }
 
-  // success: if JSON, parse it; otherwise return raw text
-  if (contentType.includes("application/json")) {
-    return JSON.parse(text);
-  }
-  return text;
+  return contentType.includes("application/json") ? JSON.parse(text) : (text as unknown as T);
 }

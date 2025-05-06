@@ -8,7 +8,7 @@ export  type UserDocument = Document & {
   name:     string;
   email:    string;
   password: string;
-  role: string;
+  role: 'programmer' | 'player';
   games: Types.ObjectId[]; 
   isValidPassword(password: string): Promise<boolean>;
   

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { apiRequest } from "@/utils/api";
 
 export default function LeaderboardManagerPage() {
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
@@ -11,14 +12,14 @@ export default function LeaderboardManagerPage() {
   useEffect(() => {
     async function fetchLeaderboard() {
       try {
-        const res = await fetch("/api/leaderboard");
+        const data = await apiRequest("/api/leaderboard/all-scores?game_name=All Games");
         const data = await res.json();
         setLeaderboard(data);
       } catch (err) {
         console.error("Failed to load leaderboard.", err);
       }
     }
-    fetchLeaderboard();
+    setLeaderboard(data.top_scores);
   }, []);
 
   const handleDelete = async (id: number) => {

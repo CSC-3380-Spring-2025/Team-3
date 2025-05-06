@@ -46,11 +46,11 @@ export default function SignUpPage() {
       router.push(userRole === "programmer" ? "/pages/programmer-dashboard" : "/pages/games")
 
 
-      // if (userRole === "programmer") {
-      //   router.push("/pages/programmer-dashboard");
-      // } else {
-      //   router.push("/pages/games");
-      // }
+      if (userRole === "programmer") {
+        router.push("/pages/programmer-dashboard");
+      } else {
+        router.push("/pages/games");
+      }
     } catch (err: any) {
       console.error("Sign-up error:", err);
       setError(err.message || "Sign-up failed. Please try again.");

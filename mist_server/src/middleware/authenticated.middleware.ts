@@ -5,11 +5,15 @@ import Token from '@/utils/interfaces/token.interface'
 import HttpException from "@/utils/exceptions/http.exception";
 import  jwt  from "jsonwebtoken";
 
+
+
 async function authenticatedMiddleware(
     req: Request,
     res: Response,
     next: NextFunction,
 ): Promise<void> {
+    console.log("[AUTH] Middleware triggered on path:", req.path);
+
     const bearer = req.headers.authorization;
 
     if (!bearer || !bearer.startsWith('Bearer ')){

@@ -1,9 +1,16 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { UserDocument } from '@/resources/user/user.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 const UserSchema = new Schema<UserDocument>(
   {
+    ID: {
+      type: String,
+      required: true,
+      unique: true,
+      default: uuidv4,
+    },
     username: {
       type: String,
       required: false,
@@ -30,6 +37,7 @@ const UserSchema = new Schema<UserDocument>(
 
     role: {
       type: String,
+      enum: ['programmer', 'player'],
       required: true,
     },
     games: [

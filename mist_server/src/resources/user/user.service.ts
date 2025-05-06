@@ -14,7 +14,7 @@ class UserService {
     name: string,
     email: string,
     password: string,
-    role: string
+    role: 'programmer' | 'player'
   ): Promise<string> {
     const existing = await this.user.findOne({ email });
     if (existing) throw new Error('Email already in use');
@@ -23,7 +23,6 @@ class UserService {
     const uniqueUsername = `${prefix}-${uuidv4().slice(0, 8)}`;
 
     const userDoc = await this.user.create({
-      ID:       uuidv4(),
       username: uniqueUsername,
       name,
       email,
@@ -32,7 +31,8 @@ class UserService {
       games:    [],
     } as Partial<UserDocument>);
 
-    return token.createToken(userDoc);
+    const jwt = token.createToken(userDoc);
+    return jwt;
   }
 
   

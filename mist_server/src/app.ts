@@ -1,4 +1,3 @@
-// src/server.ts
 import express, {Application} from "express";
 import mongoose from "mongoose";
 import compression from "compression";
@@ -6,8 +5,6 @@ import morgan from "morgan";
 import Controller from '@/utils/interfaces/controller.interface';
 import ErrorMiddleware from '@/middleware/error.middleware';
 import cors from "cors";
-import dotenv from "dotenv";
-import connectDB from "./utils/db";
 import helmet from "helmet";
 import leaderboardRoutes from "./resources/leaderboard/leaderboard.routes";
 
@@ -76,12 +73,6 @@ class App{
 
 export default App
 
-//simpleton setup, chatgpt bitched me, turns out I have zero clue what I'm doing
-//the class Above does the same thing as this, with more dependencies, and is in a class so that we can really
-//get to see is going on, and to make it more 'object-oriented', it helps with visualizing,
-//this is like the 1024 square, and index.ts is 2048, wing bam shabop, el jefe. Keep it nice and clean and it starts to feel nice and cozy
-//I'm still writing notes for what each function, interface, and class does, but if you follow the flow of index.ts, you can see how it's created and started.
-//I'm still experimenting with db.ts, but it's not used anywhere atm
 // dotenv.config();
 
 // const app = express();

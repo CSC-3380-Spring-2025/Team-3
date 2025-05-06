@@ -11,7 +11,7 @@ type Score = {
 
 export default function Leaderboard({ gameName }: { gameName: string }) {
   const [allScores, setAllScores] = useState<Score[]>([]);
-  const [error,     setError]      = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!gameName) return;
@@ -19,9 +19,7 @@ export default function Leaderboard({ gameName }: { gameName: string }) {
     async function loadScores() {
       try {
         const body = await apiRequest(
-          `http://localhost:5000/api/leaderboard/all-scores?game_name=${encodeURIComponent(
-            gameName
-          )}`
+          `/api/leaderboard/all-scores?game_name=${encodeURIComponent(gameName)}`
         );
         setAllScores(Array.isArray(body) ? body : body.top_scores);
       } catch (e: any) {
