@@ -8,76 +8,46 @@ import { apiRequest } from "@/utils/api";
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const [name, setName] = useState("");
+  // const [role, setRole] = useState("player");
+  // const [games, setGames] = useState<string[]>([]);
   const [error, setError] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isDeveloper, setIsDeveloper] = useState(false);
-  const [isGameUser, setIsGameUser] = useState(false);
-  const [isGuest, setIsGuest] = useState(false);
-  const [token, setToken] = useState("");
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
-  const [userType, setUserType] = useState("");
+  // const [token, setToken] = useState("");
   const router = useRouter();
 
 
   // Debugging: Log the state values
   console.log("isLoggedIn:", isLoggedIn);
-  console.log("isDeveloper:", isDeveloper);
-  console.log("isGameUser:", isGameUser);
-  console.log("isGuest:", isGuest);
   console.log("Form values:");
 
   console.log(email, password);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
     try {
-      const res = await apiRequest("/users/login", {
+      // Call your API and get back { token: string }
+      const { token } = await apiRequest("/users/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
 
-      // Handle successful login (e.g., save token, redirect)
-      console.log("Login successful:", res);
-      setToken(res.token);
-      setUserId(res.userId);
-      setUserName(res.userName);
-      setUserType(res.userType);
+      // **Persist to localStorage**
+      localStorage.setItem("token", token);
+
+      // Optionally, decode the token if you need userData client-side
+      // const payload = JSON.parse(atob(token.split(".")[1]));
+      // localStorage.setItem("role", payload.role);
       setIsLoggedIn(true);
-      setIsDeveloper(res.isDeveloper);
-      setIsGameUser(res.isGameUser);
-      setIsGuest(res.isGuest);
-      console.log("User ID:", res.userId);
-      console.log("User Name:", res.userName);
-      console.log("User Type:", res.userType);
-      console.log("Token:", res.token);
-      console.log("isLoggedIn:", isLoggedIn);
-      console.log("isDeveloper:", isDeveloper);
-      console.log("isGameUser:", isGameUser);
-      console.log("isGuest:", isGuest);      
+      // Optionally, set user data in localStorage
 
-      localStorage.setItem("token", res.token);
-
-      const payload = JSON.parse(atob(res.token.split('.')[1]));
-      localStorage.setItem("role", payload.role || "player");
-
-      if (payload.role === "programmer") {
-        router.push("programmer-dashboard");
-      } else {
-        router.push("home");
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error(err);
-        setError(err.message);
-      } else {
-        console.error("Unexpected error:", err);
-        setError("An unexpected error occurred. Please try again..");
-      }
+      router.push("/games"); // or wherever you want to land
+    } catch (err: any) {
+      setError(err.message || "Login failed. Please try again.");
     }
   };
-
   return (
     <div className="app-container min-h-screen w-full flex flex-col">
       <header className="app-header">

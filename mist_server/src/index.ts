@@ -5,6 +5,7 @@ import validateEnv from '@/utils/validateEnv';
 import PostController from '@/resources/post/post.controller';
 import UserController from './resources/user/user.controller';
 import cors from "cors";
+import GameController from './resources/game/game.controller';
 
 validateEnv();
 
@@ -12,6 +13,7 @@ const app = new App(
     [
         new PostController(),
         new UserController(),
+        new GameController(),
         // Add other controllers here
     ],
     Number(process.env.PORT)

@@ -1,3 +1,4 @@
+// src/app/pages/upload-game/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -18,22 +19,35 @@ export default function UploadGamePage() {
     setLoading(true);
 
     try {
-      // Base64-encode the code string
+      // 1) Base64-encode the code string
       const codeBase64 = btoa(unescape(encodeURIComponent(code)));
 
-      // Prepare payload
-      const payload = { title, gameType, data: codeBase64 };
+      // 2) Grab token
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("You must be logged in to upload.");
 
-      // Use your apiRequest helper
+      // 3) Call your API
       const { game } = await apiRequest("/games", {
         method: "POST",
-        body: JSON.stringify(payload),
+        headers: {
+          // merge with apiRequest’s Content-Type
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          title,
+          gameType,
+          data: codeBase64,
+        }),
       });
 
-      // Redirect to the created game's detail page
+      // 4) Redirect to the new game’s page
       router.push(`/games/${game._id}`);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred.");
+      }
     } finally {
       setLoading(false);
     }
@@ -82,9 +96,7 @@ export default function UploadGamePage() {
           />
         </div>
 
-        {error && (
-          <p className="text-red-600 font-medium">Error: {error}</p>
-        )}
+        {error && <p className="text-red-600 font-medium">Error: {error}</p>}
 
         <button
           type="submit"

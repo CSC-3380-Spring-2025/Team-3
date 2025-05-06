@@ -43,7 +43,7 @@ class UserController implements Controller {
                 name,
                 email,
                 password,
-                role
+                role,
             )
 
             res.status(201).json({token})

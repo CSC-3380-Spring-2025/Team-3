@@ -23,7 +23,7 @@ class GameController implements Controller {
   private initializeRoutes(): void {
     this.router.post(
       `${this.path}`,
-      authenticated,
+      // authenticated,
       upload.single("gameFile"),         // <-- handle multipart/form-data
       validationMiddleware(validate.create),
       requireRole("programmer"),
@@ -32,7 +32,7 @@ class GameController implements Controller {
 
     this.router.get(
       `${this.path}`,
-      authenticated,
+      // authenticated,
       this.getAllGames
     );
 

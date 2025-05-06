@@ -14,23 +14,19 @@ class UserService {
     email: string,
     password: string,
     role: string,
-  ): Promise<string | Error> {
+    games: string[] = [],
+  ): Promise<{ token: string; userData: User } | Error> {
     try {
       const user = await this.user.create({
-        username: email.split('@')[0],
         name,
         email,
         password,
         role,
-        games: [],
-        profilePic: '',
-        bio: '',
-        gamesCreated: 0,
-        totalPlays: 0,
+        games: games.map((game) => new Types.ObjectId(game)),
       });
 
       const accessToken = token.createToken(user);
-      return accessToken;
+      return { token: accessToken, userData: user };
     } catch (error) {
       throw new Error('Unable to create user');
     }
@@ -39,13 +35,14 @@ class UserService {
   public async login(
     email: string,
     password: string,
-  ): Promise<string | Error> {
+  ): Promise<{ token: string; userData: User } | Error> {
     try {
       const user = await this.user.findOne({ email });
       if (!user) throw new Error('Cannot find this email');
 
       if (await user.isValidPassword(password)) {
-        return token.createToken(user);
+        const accessToken =  token.createToken(user);
+        return {token: accessToken, userData: user};
       } else {
         throw new Error('Incorrect password');
       }
