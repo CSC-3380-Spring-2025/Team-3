@@ -64,7 +64,7 @@ export default function GamesPage() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    router.push("login");
+    router.push("/pages/login");
   };
 
   return (

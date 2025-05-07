@@ -71,7 +71,7 @@ export default function ProgrammerDashboard() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
-    router.push("login");
+    router.push("/pages/login");
   };
 
   return (
@@ -89,7 +89,7 @@ export default function ProgrammerDashboard() {
               className="bg-[#fbb6ce] text-white px-4 py-2 rounded-full shadow-md transition"
             >
               ☰
-            </button>
+            </button>   
             {menuOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white text-gray-900 shadow-lg rounded-lg overflow-hidden z-50">
                 <Link href="/">
