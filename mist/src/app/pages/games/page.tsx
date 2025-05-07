@@ -23,34 +23,34 @@ export default function GamesPage() {
   const [favorites, setFavorites] = useState<typeof featuredGames>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    async function checkAuth() {
-      const token = localStorage.getItem("token");
-      console.log("→ checkAuth token:", token);
+  // useEffect(() => {
+  //   async function checkAuth() {
+  //     const token = localStorage.getItem("token");
+  //     console.log("→ checkAuth token:", token);
 
-      if (!token) return router.push("/login");
+  //     if (!token) return router.push("/login");
   
-      try {
-        const res = await fetch("http://localhost:5000/api/users/me", {
-          headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        if (!res.ok) throw new Error("Not authorized");
+  //     try {
+  //       const res = await fetch("http://localhost:5000/api/users/me", {
+  //         headers: { 
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`
+  //         }
+  //       });
+  //       if (!res.ok) throw new Error("Not authorized");
   
-        const data = await res.json();            // ← parse JSON
-        if (data.user.role === "pages/programmer") {
-          // programmers get their own dashboard
-          return router.replace("pages/programmer-dashboard");
-        }
-        // otherwise it’s a player, and we stay on /games
-      } catch {
-        router.replace("pages/login");
-      }
-    }
-    checkAuth();
-  }, [router]);
+  //       const data = await res.json();            // ← parse JSON
+  //       if (data.user.role === "pages/programmer") {
+  //         // programmers get their own dashboard
+  //         return router.replace("pages/programmer-dashboard");
+  //       }
+  //       // otherwise it’s a player, and we stay on /games
+  //     } catch {
+  //       router.replace("pages/login");
+  //     }
+  //   }
+  //   checkAuth();
+  // }, [router]);
   
 
   const toggleFavorite = (game: (typeof featuredGames)[0]) => {

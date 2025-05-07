@@ -1,15 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { apiRequest } from "@/utils/api";
 
 export default function LoginPage() {
   const [email, setEmail]       = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError]       = useState<string>("");
   const router = useRouter();
+
+
+   useEffect(() => {
+      async function checkAuth() {
+        const token = localStorage.getItem("token");
+        console.log("→ checkAuth token:", token);
+  
+        if (!token) return router.push("/login");
+    
+        try {
+          const res = await fetch("http://localhost:5000/api/users/me", {
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            }
+          });
+          if (!res.ok) throw new Error("Not authorized");
+    
+          const data = await res.json();   
+          console.log(data)         // ← parse JSON
+          if (data.user.role === "programmer") {
+            // programmers get their own dashboard
+            return router.replace("programmer-dashboard");
+          } else if (data.user.role === "player") {
+            // players get their own dashboard
+            return router.replace("games");
+          }
+          // otherwise it’s a player, and we stay on /games
+        } catch {
+          router.replace("pages/login");
+        }
+      }
+      checkAuth();
+    }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

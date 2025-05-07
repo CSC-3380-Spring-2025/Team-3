@@ -14,41 +14,44 @@ const tools = [
 export default function ProgrammerDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [role, setRole] = useState(() => localStorage.getItem("role") || "player");
+
   const [favorites, setFavorites] = useState<typeof tools>([]);
 
-  useEffect(() => {
-    async function checkAuth() {
-      const token = localStorage.getItem("token");
-      console.log("→ checkAuth token:", token);
+  // useEffect(() => {
+  //   async function checkAuth() {
+  //     const token = localStorage.getItem("token");
+  //     console.log("→ checkAuth token:", token);
 
-      if (!token) return router.push("/login");
+  //     if (!token) return router.push("/login");
   
-      try {
-        const res = await fetch("http://localhost:5000/api/users/me", {
-          headers: { 
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        });
-        if (!res.ok) throw new Error("Not authorized");
+  //     try {
+  //       const res = await fetch("http://localhost:5000/api/users/me", {
+  //         headers: { 
+  //           "Content-Type": "application/json",
+  //           "Authorization": `Bearer ${token}`
+  //         }
+  //       });
+  //       if (!res.ok) throw new Error("Not authorized");
   
-        const data = await res.json();            // ← parse JSON
-        if (data.user.role === "programmer") {
-          // programmers get their own dashboard
-          setLoading(false);
-          return router.replace("programmer-dashboard");
-        }
-        // otherwise it’s a player, and we stay on /games
-      } catch {
-        router.replace("pages/login");
-      }
-    }
-    checkAuth();
-  }, [router]);
+  //       const data = await res.json();            // ← parse JSON
+  //       if (data.user.role === "programmer") {
+  //         // programmers get their own dashboard
+  //         setLoading(false);
+  //         return router.replace("programmer-dashboard");
+  //       }
+  //       // otherwise it’s a player, and we stay on /games
+  //     } catch {
+  //       router.replace("pages/login");
+  //     }
+  //   }
+  //   checkAuth();
+  // }, [router]);
 
-  if (loading) {
-    return <div className="text-center mt-10 text-blue-800">Loading dashboard...</div>;
-  }
+  // if (loading) {
+  //   return <div className="text-center mt-10 text-blue-800">Loading dashboard...</div>;
+  // }
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {
     setFavorites((prev) =>
@@ -65,6 +68,12 @@ export default function ProgrammerDashboard() {
     else router.push(`/programmer/${tool.id}`);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    router.push("login");
+  };
+
   return (
     <div className="min-h-screen w-full flex flex-col font-sans bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50 text-gray-900">
       {/* Header */}
@@ -74,9 +83,35 @@ export default function ProgrammerDashboard() {
             <h1 className="text-3xl font-extrabold tracking-wide">ORCA INDUSTRIES</h1>
             <p className="text-sm text-sky-100">Programmer Dashboard</p>
           </div>
-          <Link href="/">
-            <button className="bg-[#fbb6ce] hover:bg-[#f38cb5] text-white px-6 py-2 rounded-full shadow-md transition duration-300">Home</button>
-          </Link>
+          <div className="relative">
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="bg-[#fbb6ce] text-white px-4 py-2 rounded-full shadow-md transition"
+            >
+              ☰
+            </button>
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 bg-white text-gray-900 shadow-lg rounded-lg overflow-hidden z-50">
+                <Link href="/">
+                  <div className="px-4 py-2 hover:bg-sky-100 cursor-pointer">Home</div>
+                </Link>
+                <Link href="/pages/games">
+                  <div className="px-4 py-2 hover:bg-sky-100 cursor-pointer">Games</div>
+                </Link>
+                <Link href="/pages/profile">
+                  <div className="px-4 py-2 hover:bg-sky-100 cursor-pointer">Profile</div>
+                </Link>
+                <Link href="/pages/settings">
+                  <div className="px-4 py-2 hover:bg-sky-100 cursor-pointer">Settings</div>
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 hover:bg-sky-100 cursor-pointer">
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
 
