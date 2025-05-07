@@ -18,17 +18,29 @@ export default function ProgrammerDashboard() {
 
   useEffect(() => {
     async function checkAuth() {
+      const token = localStorage.getItem("token");
+      console.log("→ checkAuth token:", token);
+
+      if (!token) return router.push("/login");
+  
       try {
-        const data = await apiRequest("/api/users/me"); 
-        console.log("User role is:", data.role);
-        if (data.role !== "programmer") {
-          router.push("/pages/login");
-        } else {
-          setLoading(false); 
+        const res = await fetch("http://localhost:5000/api/users/me", {
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (!res.ok) throw new Error("Not authorized");
+  
+        const data = await res.json();            // ← parse JSON
+        if (data.user.role === "programmer") {
+          // programmers get their own dashboard
+          setLoading(false);
+          return router.replace("programmer-dashboard");
         }
-      } catch (err) {
-        console.error("Auth check failed:", err);
-        router.push("/pages/login");
+        // otherwise it’s a player, and we stay on /games
+      } catch {
+        router.replace("pages/login");
       }
     }
     checkAuth();

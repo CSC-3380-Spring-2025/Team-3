@@ -66,7 +66,7 @@ export default class UserController implements Controller {
     try {
       const { email, password } = req.body;
       const { token, role } = await this.userService.login(email, password); 
-      res.status(200).json({ token });
+      res.status(200).json({ token, role });
     } catch (error: any) {
       next(new HttpException(400, error.message));
     }
@@ -81,7 +81,7 @@ export default class UserController implements Controller {
     if (!userReq.user) {
       return next(new HttpException(404, 'No logged-in user'));
     }
-    res.status(200).json(userReq.user);
+    res.status(200).json({user: userReq.user});
   }
 
   private async getUserGames(

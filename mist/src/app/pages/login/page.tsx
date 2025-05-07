@@ -11,39 +11,34 @@ export default function LoginPage() {
   const [error, setError]       = useState<string>("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError(""); 
     try {
-      
-      const { token, role: userRole } = await apiRequest(
-        "/api/users/login",
-        {
-          skipAuth: true,
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+      const { token, role } = await apiRequest("/api/users/login", {
+        skipAuth: true,
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+  
       localStorage.setItem("token", token);
-      localStorage.setItem("role", userRole ?? "player");
-
-      console.log("Token stored:", localStorage.getItem("token"));
-      console.log("Role stored:", localStorage.getItem("role"));
-
-      setTimeout(() => {
-        console.log("User role is:", userRole);
-        if (userRole === "programmer") {
-          router.push("/pages/programmer-dashboard");
-        } else {
-          router.push("/pages/games");
-        }
-          }, 500); 
-    } catch (err: any) {
+      localStorage.setItem("role", role || "player");
+      console.log("Role stored:", role);
+  
+      // redirect immediately
+      if (role === "programmer") {
+        router.push("programmer-dashboard");
+      } else {
+        router.push("games");
+      }
+  
+    } catch (err) {
       console.error("Login error:", err);
-      setError(err.message || "Login failed. Please try again.");
+      setError(err instanceof Error ? err.message : "Login failed");
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50">
@@ -102,7 +97,7 @@ export default function LoginPage() {
           </div>
 
           <p className="mt-6 text-center text-gray-700">
-            Don't have an account?{' '}
+            Don&#39;t have an account?{' '}
             <Link href="/pages/signup" className="text-blue-600 hover:underline">
               Sign Up
             </Link>
