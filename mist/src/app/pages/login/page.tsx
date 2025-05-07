@@ -15,16 +15,18 @@ export default function LoginPage() {
     e.preventDefault();
     setError(""); 
     try {
-      const { token, role } = await apiRequest("/api/users/login", {
-        skipAuth: true,
+      const res = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
   
+      
+      console.log ("data", res);
+      const {token, role} = await res.json();
+      console.log (token, role);
       localStorage.setItem("token", token);
       localStorage.setItem("role", role || "player");
-      console.log("Role stored:", role);
   
       // redirect immediately
       if (role === "programmer") {
