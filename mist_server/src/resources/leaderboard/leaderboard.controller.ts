@@ -1,26 +1,29 @@
-import { Request, Response } from "express";
-import { insertScore, getTopScores } from "./leaderboard.service";
+import { Router, Request, Response } from "express";
+import { getTopScores } from "./leaderboard.service";
+import Controller from '@/utils/interfaces/controller.interface';
 
-export const submitScore = async (req: Request, res: Response): Promise<void> => {
-  const { player_name, score, game_name } = req.body;
+export default class LeaderboardController implements Controller {
+  public path = "/leaderboard"; 
+  public router: Router;
 
-  if (!player_name || !score || !game_name) {
-    res.status(400).json({ error: "Missing required fields" });
-    return;
+  constructor() {
+    this.router = Router();
+    this.router.get("/all-scores", this.getLeaderboard);
   }
 
-  await insertScore({ player_name, score, game_name });
-  res.status(200).json({ message: "Score submitted!" });
-};
+  public async getLeaderboard(req: Request, res: Response): Promise<void> {
+    const game_name = req.query.game_name as string;
 
-export const leaderboard = async (req: Request, res: Response): Promise<void> => {
-  const game_name = req.query.game_name as string;
+    if (!game_name) {
+      res.status(400).json({ error: "Missing game_name parameter" });
+      return;
+    }
 
-  if (!game_name) {
-    res.status(400).json({ error: "Missing game_name parameter" });
-    return;
+    try {
+      const scores = await getTopScores(game_name);
+      res.status(200).json({ game_name, top_scores: scores });
+    } catch (error) {
+      res.status(500).json({ error: "Could not load leaderboard" });
+    }
   }
-
-  const scores = await getTopScores(game_name);
-  res.status(200).json({ game_name, top_scores: scores });
-};
+}

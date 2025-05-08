@@ -1,51 +1,47 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { apiRequest } from "@/utils/api";
 
 type Score = {
+  _id?:        string;
   player_name: string;
-  score: number;
+  score:       number;
 };
 
 export default function Leaderboard({ gameName }: { gameName: string }) {
-  const [scores, setScores] = useState<Score[]>([]);
+  const [allScores, setAllScores] = useState<Score[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/leaderboard/leaderboard?game_name=${gameName}`)
-      .then((res) => res.json())
-      .then((data) => setScores(data.top_scores));
+    if (!gameName) return;
+
+    async function loadScores() {
+      try {
+        const body = await apiRequest(
+          `/api/leaderboard/all-scores?game_name=${encodeURIComponent(gameName)}`
+        );
+        setAllScores(Array.isArray(body) ? body : body.top_scores);
+      } catch (e: any) {
+        console.error("Leaderboard error:", e);
+        setError("Failed to load scores.");
+      }
+    }
+
+    loadScores();
   }, [gameName]);
 
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
+
   return (
-    <div className="w-full max-w-lg mx-auto">
-      <h2 className="text-center text-xl font-bold mb-4">{gameName} Leaderboard</h2>
-      <table className="w-full border border-gray-200 shadow-md rounded-lg overflow-hidden">
-        <thead className="bg-gray-100">
-          <tr>
-            <th className="py-2 px-4">#</th>
-            <th className="py-2 px-4">Player</th>
-            <th className="py-2 px-4">Score</th>
-          </tr>
-        </thead>
-        <tbody>
-          <AnimatePresence>
-            {scores.map((score, i) => (
-              <motion.tr
-                key={`${score.player_name}-${score.score}`}
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.3 }}
-                className="border-t"
-              >
-                <td className="py-2 px-4">{i + 1}</td>
-                <td className="py-2 px-4">{score.player_name}</td>
-                <td className="py-2 px-4">{score.score}</td>
-              </motion.tr>
-            ))}
-          </AnimatePresence>
-        </tbody>
-      </table>
-    </div>
+    <ul>
+      {allScores.map((s) => (
+        <li key={s._id}>
+          {s.player_name}: {s.score}
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -1,22 +1,38 @@
-import GameModel from '@/resources/game/game.model';
-import Game from '@/resources/game/game.interface';
+import { Types } from "mongoose";
+import GameModel from "./game.model";
+import Game from "./game.interface";
+
+interface CreateGameDto {
+  title:    string;
+  gameType: string;
+  data:     string;
+  userId:   string;
+  gameID:   string;
+}
 
 class GameService {
-  private game = GameModel;
-
-  public async createGame(data: {
-    title: string;
-    gameType: string;
-    data: any;
-  }): Promise<Game> {
-    try {
-      const game = await this.game.create(data);
-      return game;
-    } catch (error: any) {
-      throw new Error('Unable to create game: ' + error.message);
-    }
+  public async createGame(dto: CreateGameDto): Promise<Game> {
+    const created = await GameModel.create({
+      title:     dto.title,
+      gameType:  dto.gameType,
+      data:      dto.data,
+      createdBy: new Types.ObjectId(dto.userId),
+      gameID:    dto.gameID,
+    });
+    return created;
   }
 
+  public async getAllGames(): Promise<Game[]> {
+    return GameModel.find().populate("createdBy", "username").exec();
+  }
+
+  public async getGameById(id: string): Promise<Game | null> {
+    return GameModel.findById(id).populate("createdBy", "username").exec();
+  }
+
+  public async deleteGame(id: string): Promise<Game | null> {
+    return GameModel.findByIdAndDelete(id).exec();
+  }
 }
 
 export default GameService;

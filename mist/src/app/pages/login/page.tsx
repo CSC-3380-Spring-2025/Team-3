@@ -1,144 +1,146 @@
-/*login page for users to create a profile
-* Components to create:
-*   email, username, password, area to select if a developer or a game user
-*/
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+export default function LoginPage() {
+  const [email, setEmail]       = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [error, setError]       = useState<string>("");
   const router = useRouter();
+
+
+   useEffect(() => {
+      async function checkAuth() {
+        const token = localStorage.getItem("token");
+        console.log("→ checkAuth token:", token);
+  
+        if (!token) return router.push("/pages/login");
+    
+        try {
+          const res = await fetch("http://localhost:5000/api/users/me", {
+            headers: { 
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            }
+          });
+          if (!res.ok) throw new Error("Not authorized");
+    
+          const data = await res.json();   
+          console.log(data)
+          if (data.user.role === "programmer") {
+            // programmers get their own dashboard
+            return router.replace("programmer-dashboard");
+          } else if (data.user.role === "player") {
+            // players get their own dashboard
+            return router.replace("games");
+          }
+          // otherwise it’s a player, and we stay on /games
+        } catch {
+          router.replace("pages/login");
+        }
+      }
+      checkAuth();
+    }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    setError(""); 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch("http://localhost:5000/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        setError(errorData.message || "An unexpected error occurred. Please try again.");
-        return;
+  
+      const data = await res.json();
+      const {token, role} = data
+      console.log (token, role);
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", role || "player");
+  
+      // redirect immediately
+      if (role === "programmer") {
+        router.push("programmer-dashboard");
+      } else {
+        router.push("games");
       }
-
-
-      router.push("/");
+  
     } catch (err) {
-      console.error(err);
-      setError("Either your email or password is incorrect. Please try again");
+      console.error("Login error:", err);
+      setError(err instanceof Error ? err.message : "Login failed");
     }
   };
+  
 
   return (
-    <div className="app-container min-h-screen w-full flex flex-col">
-      {/* Header */}
-      <header className="app-header">
-        <div className="navbar">
-          {/* Left side: Title + Slogan */}
-          <div>
-            <h1>ORCA INDUSTRIES</h1>
-            <p className="m-0">play, program, create, collaborate</p>
-          </div>
-          {/* Right side: Link to Home */}
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50">
+      <header className="bg-sky-500 text-white p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-extrabold">ORCA INDUSTRIES</h1>
           <Link href="/">
-            <button>Home</button>
+            <button className="bg-pink-300 hover:bg-pink-400 text-white px-4 py-2 rounded-full">
+              Home
+            </button>
           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="main-content flex-grow flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
-          {/* Error message */}
-          {error && <div className="mb-4 text-red-500">{error}</div>}
+      <main className="flex-grow flex items-center justify-center">
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+          <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
+            Log In to Your Pod
+          </h2>
 
-          {/* Login Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label htmlFor="email" className="block mb-1">
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-            <div>
-              <label htmlFor="password" className="block mb-1">
-                Password:
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          <input
+              type="email"
+              id="email"
+              name="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Email"
+              required
+              className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+          />
 
-            {/* Login button uses global .button style */}
-            <button type="submit">Login</button>
-          </form>
+          <input
+              type="password"
+              id="password"
+              name="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+              required
+              className="w-full border rounded p-3 mb-6 focus:ring-2 focus:ring-blue-300"
+            />
 
-          {/* Play as Guest Button */}
+          <button
+            type="submit"
+            className="w-full bg-pink-300 hover:bg-pink-400 text-white py-3 rounded-full transition"
+          >
+            Log In
+          </button>
+
           <div className="mt-4 text-center">
-          <Link href="home">
-              <button>Play as Guest</button>
+            <Link href="/pages/home">
+              <button className="text-blue-600 hover:underline">Play as Guest</button>
             </Link>
           </div>
 
-          {/* Sign Up Link */}
-          <p className="mt-4 text-center">
-            Don’t have an account?{" "}
-            <Link href="signup" className="text-blue-600 hover:underline">
+          <p className="mt-6 text-center text-gray-700">
+            Don&#39;t have an account?{' '}
+            <Link href="/pages/signup" className="text-blue-600 hover:underline">
               Sign Up
             </Link>
           </p>
-        </div>
+        </form>
       </main>
 
-      {/* Footer */}
-      <footer
-        className="app-footer flex flex-col items-center justify-center p-4"
-        style={{
-          backgroundColor: "#1695c3",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
-        <div className="flex justify-between w-full max-w-3xl gap-4">
-          <img
-            src="/images/game1.jpg"
-            alt="Game 1"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game2.jpg"
-            alt="Game 2"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game3.jpg"
-            alt="Game 3"
-            className="w-1/4 h-auto object-cover"
-          />
-        </div>
+      <footer className="bg-sky-500 text-white text-center py-4">
+        <h3 className="text-xl">Tide Talk</h3>
       </footer>
     </div>
   );
