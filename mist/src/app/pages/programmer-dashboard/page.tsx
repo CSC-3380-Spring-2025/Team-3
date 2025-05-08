@@ -18,7 +18,7 @@ export default function ProgrammerDashboard() {
   const [user, setUser] = useState<{ id: string; role: string } | null>(null);
   const [games, setGames] = useState([]);
 
-  console.log("🔥 ProgrammerDashboard rendered on the client");
+  console.log("ProgrammerDashboard rendered on the client");
 
   const [favorites, setFavorites] = useState<typeof tools>([]);
 

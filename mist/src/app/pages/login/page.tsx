@@ -28,7 +28,7 @@ export default function LoginPage() {
           if (!res.ok) throw new Error("Not authorized");
     
           const data = await res.json();   
-          console.log(data)         // ← parse JSON
+          console.log(data)
           if (data.user.role === "programmer") {
             // programmers get their own dashboard
             return router.replace("programmer-dashboard");

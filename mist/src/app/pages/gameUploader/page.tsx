@@ -71,7 +71,6 @@ export default function GameUploader() {
       setUploading(true);
       setProgress(25);
   
-      // ← correct URL here
       const createRes = await fetch(`${API_BASE}/games`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
@@ -84,7 +83,6 @@ export default function GameUploader() {
       const { game } = await createRes.json();
       setProgress(70);
   
-      // ← and correct URL here
       const linkRes = await fetch(`${API_BASE}/users/me/games`, {
         method: "POST",
         headers: {
