@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-# [ORCA Industries] : [Team 3]
-=======
 # ORCA Industries : [Team 3]
->>>>>>> development
 # Members
 Project Manager: [Julian Melancon] ([JulianM08])\
 Communications Lead: [Alexis Harvey] ([Alexis-Harvey])\
@@ -12,11 +8,7 @@ Quality Assurance Tester: [Aaroh Desai] ([AarohD1])
 
 # About Our Software
 
-<<<<<<< HEAD
-Hello! Our project aims to combine a website aimed at playing games and allowing developers to upload games to launch their gaming careers. The website itself will operate with a login/ user profile based system, using HTML, CSS, and JavaScript to design our specific needs. From there we are using a stack consisting of Next.js for our front-end framework, Node.js and Express for our back-end API, MongoDB for our database, and JSON Web Tokens for secure authentication. 
-=======
 Hello! Our project aims to combine a website aimed at playing games and allowing developers to upload games to launch their gaming careers. It is a full stack MERN application, allowing users to create accounts and create games all in one site! Currently only in local development, although we plan to go public with our recent investors in the near future!
->>>>>>> development
 
 ## Platforms Tested on
 - Windows
@@ -30,18 +22,9 @@ Designs and Styles Guide: [https://drive.google.com/drive/folders/1ALjbthP5pX12N
 
 
 ## Dependencies
-- "framer-motion": "^12.7.4",
-- "nanoid": "^5.1.5",
-- "next": "^15.3.0",
-- "react": "^19.0.0",
-- "react-dom": "^19.0.0",
-- "sqlite": "^5.1.1",
-- "sqlite3": "^5.1.7"
-  
+- List all dependencies here
+- Don't forget to include versions
 ### Downloading Dependencies
-<<<<<<< HEAD
-npm install 
-=======
 Describe where to download the dependencies here. Some will likely require a web download. Provide links here. For IDE extensions, make sure your project works with the free version of them, and detail which IDE(s) these are available in.
 "dependencies": {
     "@monaco-editor/react": "^4.7.0",
@@ -110,11 +93,10 @@ Describe where to download the dependencies here. Some will likely require a web
 
 	You need to be running mongodb through docker desktop to run it as a test environment, we are still working on free vercel deployment. 
 	You will also need Mongodb Compass to connect to the database
->>>>>>> development
+npm install 
 
 ## Commands
 Describe how the commands and process to launch the project on the main branch in such a way that anyone working on the project knows how to check the affects of any code they add.
-
 First, Follow the env.example to fill in mongodb compass credentials and urls. ie, mongodb://localhost:27017/<>  ;  @localhost:27017/mydatabase
 
 Frontend:
@@ -130,7 +112,6 @@ npm install && npm run dev
 
 optional but recommended for testing:
 Postman
-
 
 ```sh
 Example terminal command syntax
