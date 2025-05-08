@@ -96,6 +96,9 @@ Describe where to download the dependencies here. Some will likely require a web
 
 ## Commands
 Describe how the commands and process to launch the project on the main branch in such a way that anyone working on the project knows how to check the affects of any code they add.
+
+First, Follow the env.example to fill in mongodb compass credentials and urls. ie, mongodb://localhost:27017/<>  ;  @localhost:27017/mydatabase
+
 Frontend:
 git pull
 cd mist
