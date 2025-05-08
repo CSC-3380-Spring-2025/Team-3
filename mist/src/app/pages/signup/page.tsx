@@ -3,185 +3,152 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { apiRequest } from "@/utils/api";
 
 export default function SignUpPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [role, setRole] = useState("player"); // "player" or "programmer"
-  const [error, setError] = useState("");
-
+  const [name, setName]                   = useState<string>("");
+  const [email, setEmail]                 = useState<string>("");
+  const [password, setPassword]           = useState<string>("");
+  const [confirmPassword, setConfirm]     = useState<string>("");
+  const [role, setRole]                   = useState<string>("player");
+  const [error, setError]                 = useState<string>("");
   const router = useRouter();
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
 
-    // Basic check: confirm passwords match
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    
+    setError("");
+
+    if (!name.trim()) {
+      setError("Name is required.");
+      return;
+    }
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters long.");
+      return;
+    }
 
-    // Skeleton fetch request to your dedicated backend API route
     try {
-      const res = await fetch("http://localhost:5000/api/auth/signup", {
+      // Send the sign-up request
+      const { token, role: userRole } = await apiRequest("/api/users/register", {
+        skipAuth: true,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, password, role }),
       });
+      console.log (token);
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", userRole || "player");
+      router.push(userRole === "programmer" ? "/pages/programmer-dashboard" : "/pages/games")
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        setError(errorData.message || "Sign-up failed. Please try again.");
-        return;
+
+      if (userRole === "programmer") {
+        router.push("/pages/programmer-dashboard");
+      } else {
+        router.push("/pages/games");
       }
-
-      // Redirect to home or dashboard on success
-      router.push("/");
-    } catch (err) {
-      console.error(err);
-      setError("An unexpected error occurred during sign-up.");
+    } catch (err: any) {
+      console.error("Sign-up error:", err);
+      setError(err.message || "Sign-up failed. Please try again.");
     }
-  }
+  };
+
+  
+  console.log("data", name, email, password, confirmPassword, role);
+
+  console.log("error", error);
 
   return (
-    <div className="app-container min-h-screen w-full flex flex-col">
-      {/* Header */}
-      <header className="app-header">
-        <div className="navbar">
-          {/* Left side: Title + Slogan */}
-          <div>
-            <h1>ORCA INDUSTRIES</h1>
-            <p className="m-0">play, program, create, collaborate</p>
-          </div>
-          {/* Right side: Link to Home or Login */}
+    <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-200 via-sky-100 to-blue-50">
+      <header className="bg-sky-500 text-white p-4">
+        <div className="flex justify-between items-center">
+          <h1 className="text-3xl font-extrabold">ORCA INDUSTRIES</h1>
           <Link href="/">
-            <button>Home</button>
+            <button className="bg-pink-300 hover:bg-pink-400 text-white px-4 py-2 rounded-full">
+              Home
+            </button>
           </Link>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="main-content flex-grow flex flex-col items-center justify-center">
-        <div className="w-full max-w-md bg-white p-6 rounded shadow-md">
-          {/* Error message */}
-          {error && <div className="mb-4 text-red-500">{error}</div>}
+      <main className="flex-grow flex items-center justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="bg-white p-8 rounded-xl shadow-md w-full max-w-md"
+        >
+          <h2 className="text-2xl font-bold text-center text-blue-800 mb-6">
+            Create Your Pod Account
+          </h2>
 
-          {/* Sign Up Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div>
-              <label htmlFor="name" className="block mb-1">
-                Name:
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          {error && <div className="text-red-500 text-center mb-4">{error}</div>}
 
-            <div>
-              <label htmlFor="email" className="block mb-1">
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Name"
+            required
+            className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+          />
 
-            <div>
-              <label htmlFor="password" className="block mb-1">
-                Password:
-              </label>
-              <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            required
+            className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+          />
 
-            <div>
-              <label htmlFor="confirmPassword" className="block mb-1">
-                Confirm Password:
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full border rounded p-2"
-                required
-              />
-            </div>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+            required
+            className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+          />
 
-            {/* Dropdown for Player or Programmer */}
-            <div>
-              <label htmlFor="role" className="block mb-1">
-                Select Role:
-              </label>
-              <select
-                id="role"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-                className="w-full border rounded p-2"
-              >
-                <option value="player">Player</option>
-                <option value="programmer">Programmer</option>
-              </select>
-            </div>
+          <input
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirm(e.target.value)}
+            placeholder="Confirm Password"
+            required
+            className="w-full border rounded p-3 mb-4 focus:ring-2 focus:ring-blue-300"
+          />
 
-            <button type="submit">Sign Up</button>
-          </form>
+          <select
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+            className="w-full border rounded p-3 mb-6 focus:ring-2 focus:ring-blue-300"
+          >
+            <option value="player">Player</option>
+            <option value="programmer">Programmer</option>
+          </select>
 
-          {/* Link to Login */}
-          <p className="mt-4 text-center">
+          <button
+            type="submit"
+            className="w-full bg-pink-300 hover:bg-pink-400 text-white py-3 rounded-full transition"
+          >
+            Sign Up
+          </button>
+
+          <p className="mt-6 text-center text-gray-700">
             Already have an account?{" "}
-            <Link href="login" className="text-blue-600 hover:underline">
+            <Link href="/pages/login" className="text-blue-600 hover:underline">
               Log In
             </Link>
           </p>
-        </div>
+        </form>
       </main>
 
-      {/* Footer */}
-      <footer
-        className="app-footer flex flex-col items-center justify-center p-4"
-        style={{
-          backgroundColor: "#1695c3",
-          color: "#fff",
-          textAlign: "center",
-        }}
-      >
-        <h3 className="text-2xl font-bold mb-2">Tide Talk</h3>
-        <div className="flex justify-between w-full max-w-3xl gap-4">
-          <img
-            src="/images/game1.jpg"
-            alt="Game 1"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game2.jpg"
-            alt="Game 2"
-            className="w-1/4 h-auto object-cover"
-          />
-          <img
-            src="/images/game3.jpg"
-            alt="Game 3"
-            className="w-1/4 h-auto object-cover"
-          />
-        </div>
+      <footer className="bg-sky-500 text-white text-center py-4">
+        <h3 className="text-xl">Tide Talk</h3>
       </footer>
     </div>
   );

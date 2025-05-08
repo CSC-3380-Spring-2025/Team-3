@@ -1,34 +1,34 @@
-// start.js script to ensure uniform startup
-const { execSync } = require('child_process');
+#!/usr/bin/env node
+const { execSync, spawn } = require('child_process');
 
-function runCommand(command) {
+// Helper to run a blocking command
+function runCommand(command, options = {}) {
   console.log(`\nRunning: ${command}`);
   try {
-    // { shell: true } should make this work cross-platform
-    execSync(command, { stdio: 'inherit', shell: true });
-  } catch (error) {
-    console.error(`Error while running command: ${command}`);
+    execSync(command, { stdio: 'inherit', ...options });
+  } catch (err) {
+    console.error(`Error while running: ${command}`);
     process.exit(1);
   }
 }
 
 console.log('Starting development workflow...');
 
-//making sure it's all up to date
+// 1) Pull latest changes
 runCommand('git pull');
-
-//Start Docker Compose (make sure Docker & Docker Compose are installed)
+// 2) Bring up Mongo in Docker (if you still need it)
 runCommand('docker-compose up -d');
-
-/*Install npm dependencies (need node version >= 18 I think, but y'all shouldve had it done 
-automatically)*/
+// 3) Install dependencies
 runCommand('npm install');
 
-//Starts server, navigate to http://localhost:3000 to view in browser (I think)
-runCommand('npm run dev')
-
-//Build the Next.js project (For production)
-//runCommand('npm run build');
-
-//Start the production server
-//runCommand('npm start');
+// 4) Launch only the frontend
+console.log('\nStarting frontend (Next.js) in mist/ …');
+const frontend = spawn('npm run dev', {
+  cwd: 'mist',
+  shell: true,
+  stdio: 'inherit',
+});
+frontend.on('error', err => {
+  console.error('Failed to start frontend:', err);
+  process.exit(1);
+});

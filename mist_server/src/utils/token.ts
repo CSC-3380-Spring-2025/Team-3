@@ -1,28 +1,20 @@
 import jwt from 'jsonwebtoken';
-import User from '@/resources/user/user.interface';
-import Token from './interfaces/token.interface';
+import type { UserDocument } from '@/resources/user/user.interface';
+import type Token from './interfaces/token.interface';
 
-export const createToken = (user: User): string => {
-    return jwt.sign({ id: user._id }, process.env.JWT_SECRET as jwt.Secret, {
-        expiresIn: '1d',
-    });
+const SECRET = process.env.JWT_SECRET as string;
+
+export const createToken = (user: UserDocument): string => {
+  
+  const id = (user._id as any).toString();
+  return jwt.sign({ id, role: user.role }, SECRET, { expiresIn: '1d' });
 };
 
-export const verifyToken = async (
-    token: string,
-): Promise<jwt.VerifyErrors | Token> => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(
-            token,
-            process.env.JWT_SECRET as jwt.Secret,
-            (error, payload) => {
-                if (error) {
-                    return reject;
-                }
-                resolve(payload as Token);
-            },
-        );
-    });
-};
+export const verifyToken = (token: string): Promise<Token> =>
+  new Promise((resolve, reject) => {
+    jwt.verify(token, SECRET, (err, payload) =>
+      err ? reject(err) : resolve(payload as Token)
+    );
+  });
 
-export default {createToken, verifyToken};
+export default { createToken, verifyToken };

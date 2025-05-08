@@ -197,12 +197,12 @@ interface GameObject {
   }
   
   // Global canvas variable for use in game objects
-  const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
-  canvas.width = 800;
-  canvas.height = 600;
+  const gameCanvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
+  gameCanvas.width = 800;
+  gameCanvas.height = 600;
   
   // Start the game once the window loads
   window.onload = () => {
-    const game = new Game(canvas);
+    const game = new Game(gameCanvas);
     game.start();
   };

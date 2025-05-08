@@ -1,76 +1,104 @@
-import UserModel from '@/resources/user/user.model';
-import token from '@/utils/token';
-import User from '@/resources/user/user.interface';
 import { Types } from 'mongoose';
+import UserModel from '@/resources/user/user.model';
+import type {UserDocument} from '@/resources/user/user.interface';
+import token from '@/utils/token';
+import GameModel from '@/resources/game/game.model';
+import type Game from '@/resources/game/game.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 class UserService {
-    private user = UserModel;
+  private user = UserModel;
 
-    /**
-     * Registering a new user
-     */
+  /** Register a brand new user */
+  public async register(
+    name: string,
+    email: string,
+    password: string,
+    role: 'programmer' | 'player'
+  ): Promise<string> {
+    const existing = await this.user.findOne({ email });
+    if (existing) throw new Error('Email already in use');
 
-    public async register(
-        name: string,
-        email: string,
-        password: string,
-        role: string,
-    ): Promise<string | Error> {
-        try {
-            const user = await this.user.create({
-                name,
-                email,
-                password,
-                role,
-            });
+    const prefix = email.split('@')[0];
+    const uniqueUsername = `${prefix}-${uuidv4().slice(0, 8)}`;
 
-            const accessToken = token.createToken(user);
+    const userDoc = await this.user.create({
+      username: uniqueUsername,
+      name,
+      email,
+      password,
+      role,
+      games:    [],
+    } as Partial<UserDocument>);
 
-            return accessToken;
-        } catch (error) {
-            throw new Error('unable to make user');
-        }
-    }
+    const jwt = token.createToken(userDoc);
+    return jwt;
+  }
 
-    /**
-     * login a user
-     */
+  
+  public async login(email: string, password: string): Promise<{ token: string, role: string }> {
+    const userDoc = await this.user.findOne({ email });
+  
+    if (!userDoc) throw new Error("User not found");
+  
+    const isMatch = await userDoc.isValidPassword(password);
+    if (!isMatch) throw new Error("Invalid credentials");
+  
+    const jwt = token.createToken(userDoc);
+  
+    return { token: jwt, role: userDoc.role }; 
+  }
 
-    public async login(
-        email: string,
-        password: string,
-    ): Promise<string | Error> {
-        try {
-            const user = await this.user.findOne({ email });
-            if (!user) {
-                throw new Error('Cannot find this email');
-            }
+  
+  public async getUser(userId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    return userDoc;
+  }
 
-            if (await user.isValidPassword(password)) {
-                return token.createToken(user);
-            } else {
-                throw new Error('Incorrect password');
-            }
-        } catch (error) {
-            throw new Error('unable to log in user');
-        }
-    }
-    public async addGameToUser(userId: string, gameId: string): Promise<User> {
-        const user = await UserModel.findById(userId);
-        if (!user) {
-            throw new Error('User not found');
-        }
-        user.games.push(new Types.ObjectId(gameId));
-        await user.save();
-        return user;
-    }
-    public async getUserGames(userId: string): Promise<User> {
-        const user = await UserModel.findById(userId).populate('games').exec();
-        if (!user) {
-          throw new Error('User not found');
-        }
-        return user;
-      }
+  
+  public async getAllUsers(): Promise<UserDocument[]> {
+    return this.user.find() as Promise<UserDocument[]>;
+  }
+
+  
+  public async getUserGames(userId: string): Promise<Game[]> {
+    return GameModel.find({ createdBy: userId });
+  }
+
+  
+  public async addGameToUser(userId: string, gameId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    userDoc.games.push(new Types.ObjectId(gameId));
+    await userDoc.save();
+    return userDoc;
+  }
+
+  
+  public async deleteUser(userId: string): Promise<void> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    await userDoc.deleteOne();
+  }
+
+  
+  public async updateUser(userId: string, data: Partial<UserDocument>): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    Object.assign(userDoc, data);
+    await userDoc.save();
+    return userDoc;
+  }
+
+  
+  public async deleteGameFromUser(userId: string, gameId: string): Promise<UserDocument> {
+    const userDoc = (await this.user.findById(userId)) as UserDocument | null;
+    if (!userDoc) throw new Error('User not found');
+    userDoc.games = userDoc.games.filter((g) => g.toString() !== gameId);
+    await userDoc.save();
+    return userDoc;
+  }
 }
 
 export default UserService;

@@ -10,12 +10,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "framer-motion": "^12.6.3",
+    "@monaco-editor/react": "^4.7.0",
+    "cors": "^2.8.5",
+    "framer-motion": "^12.7.4",
+    "nanoid": "^5.1.5",
     "next": "^15.3.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -23,6 +27,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/sqlite3": "^3.1.11",
+    "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.1.7",
     "postcss": "^8",
