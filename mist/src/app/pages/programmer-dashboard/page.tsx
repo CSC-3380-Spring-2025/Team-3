@@ -15,43 +15,57 @@ export default function ProgrammerDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [role, setRole] = useState(() => localStorage.getItem("role") || "player");
+  const [user, setUser] = useState<{ id: string; role: string } | null>(null);
+  const [games, setGames] = useState([]);
+
+  console.log("🔥 ProgrammerDashboard rendered on the client");
 
   const [favorites, setFavorites] = useState<typeof tools>([]);
 
-  // useEffect(() => {
-  //   async function checkAuth() {
-  //     const token = localStorage.getItem("token");
-  //     console.log("→ checkAuth token:", token);
 
-  //     if (!token) return router.push("/login");
+  useEffect(() => {
+    console.log("⚡ user state updated:", user);
+  }, [user]);
   
-  //     try {
-  //       const res = await fetch("http://localhost:5000/api/users/me", {
-  //         headers: { 
-  //           "Content-Type": "application/json",
-  //           "Authorization": `Bearer ${token}`
-  //         }
-  //       });
-  //       if (!res.ok) throw new Error("Not authorized");
-  
-  //       const data = await res.json();            // ← parse JSON
-  //       if (data.user.role === "programmer") {
-  //         // programmers get their own dashboard
-  //         setLoading(false);
-  //         return router.replace("programmer-dashboard");
-  //       }
-  //       // otherwise it’s a player, and we stay on /games
-  //     } catch {
-  //       router.replace("pages/login");
-  //     }
-  //   }
-  //   checkAuth();
-  // }, [router]);
 
-  // if (loading) {
-  //   return <div className="text-center mt-10 text-blue-800">Loading dashboard...</div>;
-  // }
+  useEffect(() => {
+    async function checkAuth() {
+      const token = localStorage.getItem("token");
+      console.log("→ checkAuth token:", token);
+
+      if (!token) return router.push("/pages/login");
+  
+      try {
+        const res = await fetch("http://localhost:5000/api/users/me", {
+          headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        if (!res.ok) throw new Error("Not authorized");
+  
+        const data = await res.json();    
+        console.log(data)       
+        setUser(data.user.user);
+        console.log("→ user", user);
+
+        if (data.user.role === "player") {
+          // players get their own dashboard
+          return router.replace("/pages/games");
+        } 
+        setLoading(false);
+        
+        // otherwise it’s a player, and we stay on /games
+      } catch {
+        router.replace("/pages/login");
+      }
+    }
+    checkAuth();
+  }, [router, user]);
+
+  if (loading) {
+    return <div className="text-center mt-10 text-blue-800">Loading dashboard...</div>;
+  }
 
   const toggleFavorite = (tool: (typeof tools)[0]) => {
     setFavorites((prev) =>
@@ -62,10 +76,21 @@ export default function ProgrammerDashboard() {
   };
 
   const handleOpenTool = (tool: (typeof tools)[0]) => {
-    if (tool.title === "Profile") router.push("/pages/profile");
-    else if (tool.title === "Game Uploader") router.push("/pages/gameUploader");
-    else if (tool.title === "Leaderboard Manager") router.push("/pages/leaderboard-manager");
-    else router.push(`/programmer/${tool.id}`);
+    console.log("Opening tool:", tool.title);
+    switch (tool.id) {
+      case 1:
+        router.push("/pages/gameUploader");
+        break;
+      case 2:
+        router.push("/pages/leaderboard");
+        break;
+      case 3:
+        router.push("/pages/profile");
+        break;
+      default:
+        console.error("Unknown tool ID:", tool.id);
+    }
+    setMenuOpen(false);
   };
 
   const handleLogout = () => {

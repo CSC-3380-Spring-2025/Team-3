@@ -1,60 +1,38 @@
-import GameModel from '@/resources/game/game.model';
-import Game from '@/resources/game/game.interface';
+import { Types } from "mongoose";
+import GameModel from "./game.model";
+import Game from "./game.interface";
+
+interface CreateGameDto {
+  title:    string;
+  gameType: string;
+  data:     string;
+  userId:   string;
+  gameID:   string;
+}
 
 class GameService {
-  private game = GameModel;
-
-  public async createGame(data: {
-    title: string;
-    gameType: string;
-    data: any;
-    userId: string; // Add userId
-    gameID: string;
-
-  }): Promise<Game> {
-    try {
-      const game = await this.game.create({
-        ...data,
-        createdBy: data.userId, // Associate game with user
-      });
-      return game;
-    } catch (error: any) {
-      throw new Error('Unable to create game: ' + error.message);
-    }
+  public async createGame(dto: CreateGameDto): Promise<Game> {
+    const created = await GameModel.create({
+      title:     dto.title,
+      gameType:  dto.gameType,
+      data:      dto.data,
+      createdBy: new Types.ObjectId(dto.userId),
+      gameID:    dto.gameID,
+    });
+    return created;
   }
 
-  getAllGames = async (): Promise<Game[]> => {
-    try {
-      const games = await this.game.find().populate('createdBy', 'name email');
-      return games;
-    } catch (error: any) {
-      throw new Error('Unable to fetch games: ' + error.message);
-    }
+  public async getAllGames(): Promise<Game[]> {
+    return GameModel.find().populate("createdBy", "username").exec();
   }
-  getGameById = async (id: string): Promise<Game | null> => {
-    try {
-      const game = await this.game.findById(id).populate('createdBy', 'name email');
-      if (!game) {
-        throw new Error('Game not found');
-      }
-      return game;
-    } catch (error: any) {
-      throw new Error('Unable to fetch game: ' + error.message);
-    }
+
+  public async getGameById(id: string): Promise<Game | null> {
+    return GameModel.findById(id).populate("createdBy", "username").exec();
   }
 
   public async deleteGame(id: string): Promise<Game | null> {
-    try {
-      const game = await this.game.findByIdAndDelete(id);
-      if (!game) {
-        throw new Error('Game not found');
-      }
-      return game;
-    } catch (error: any) {
-      throw new Error('Unable to delete game: ' + error.message);
-    }
+    return GameModel.findByIdAndDelete(id).exec();
   }
-
 }
 
 export default GameService;

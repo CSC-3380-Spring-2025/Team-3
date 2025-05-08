@@ -5,7 +5,8 @@ import express, { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import validateEnv from '@/utils/validateEnv';
-import PostController from '@/resources/post/post.controller';
+import GameController from '@/resources/game/game.controller';
+import authenticated from '@/middleware/authenticated.middleware';
 import UserController from '@/resources/user/user.controller';
 import LeaderboardController from '@/resources/leaderboard/leaderboard.controller';
 
@@ -30,7 +31,7 @@ app.use(
 app.use(express.json());
 
 ;[
-  new PostController(),
+  new GameController(),
   new UserController(),
   new LeaderboardController(),
 ].forEach((ctr) => {
@@ -46,7 +47,7 @@ app.use(
   }
 );
 
-const PORT = Number(process.env.PORT) || 5001;
+const PORT = Number(process.env.PORT) || 5000;
 app.listen(PORT, () =>
   console.log(`API listening on http://localhost:${PORT}/`)
 );

@@ -16,7 +16,7 @@ export default function LoginPage() {
         const token = localStorage.getItem("token");
         console.log("→ checkAuth token:", token);
   
-        if (!token) return router.push("/login");
+        if (!token) return router.push("/pages/login");
     
         try {
           const res = await fetch("http://localhost:5000/api/users/me", {
@@ -54,9 +54,8 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
   
-      
-      console.log ("data", res);
-      const {token, role} = await res.json();
+      const data = await res.json();
+      const {token, role} = data
       console.log (token, role);
       localStorage.setItem("token", token);
       localStorage.setItem("role", role || "player");
